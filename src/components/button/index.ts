@@ -1,5 +1,5 @@
 import ProcketPromptButton from "./PocketPromptButton";
-import SigmineButton from "./PocketPromptButton";
+import SigmineButton from "./SigmineButton";
 
 const PRODUCT = process.env.NEXT_PUBLIC_PRODUCT;
 
