@@ -1,9 +1,10 @@
 "use client";
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import styled from "styled-components";
 
 export interface InputProps {
+  error?: boolean;
   id?: string;
   placeholder?: string;
   value: string;
@@ -17,6 +18,7 @@ export interface InputProps {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      error = false,
       placeholder,
       value = "",
       onChange,
@@ -28,6 +30,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
+    const [isError, setIsError] = useState(error);
+
+    const handleClick = () => {
+      setIsError(false);
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
 
@@ -42,14 +50,21 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <InputContainer $length={value.length} $disabled={disabled} $size={size}>
+      <InputContainer
+        $length={value.length}
+        $disabled={disabled}
+        $size={size}
+        $error={isError}
+      >
         <StyledInput
           ref={ref}
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
+          onClick={handleClick}
           onKeyDown={handleKeyDown}
           disabled={disabled}
+          $error={isError}
           {...props}
         />
         {count !== undefined && (
@@ -70,6 +85,7 @@ const InputContainer = styled.div<{
   $length: number;
   $disabled?: boolean;
   $size: number;
+  $error: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -85,6 +101,12 @@ const InputContainer = styled.div<{
   border: 1px solid ${({ theme }) => theme.colors.primary_20};
   background: ${({ theme, $length }) =>
     $length > 0 ? theme.colors.primary_10 : theme.colors.white};
+  ${({ $error }) =>
+    $error &&
+    `
+      border: 1px solid rgba(246, 78, 57, 0.30); 
+      background: rgba(246, 78, 57, 0.05); 
+    `}
 
   &:hover {
     background: ${({ theme }) => theme.colors.primary_5};
@@ -105,7 +127,7 @@ const InputContainer = styled.div<{
         `}
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{ $error: boolean }>`
   flex: 1;
   border: none;
   background: transparent;
@@ -127,6 +149,14 @@ const StyledInput = styled.input`
       color: ${({ theme }) => theme.colors.G_300};
     }
   }
+
+  ${({ $error }) =>
+    $error &&
+    `
+      &::placeholder {
+        color: rgba(246, 78, 57, 0.30);
+      }
+    `}
 `;
 
 const CountBox = styled.div<{ $length: number }>`
