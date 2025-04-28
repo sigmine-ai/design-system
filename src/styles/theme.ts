@@ -4,6 +4,8 @@ const primaryColorsByProduct = {
   POCKET_PROMPT: {
     primary: "#7580EA",
     primary_dark: "#535DBF",
+    primary_xdark: "#27339E",
+    primary_xxdark: "#252E7C",
     primary_light: "#9EADFC",
     primary_xlight: "#CEDEFF",
     primary_100: "#7580EA",
@@ -43,8 +45,8 @@ const primaryColorsByProduct = {
 
 type ProductType = keyof typeof primaryColorsByProduct; // "POCKET_PROMPT" | "SIGMINE"
 
-const PRODUCT =
-  (process.env.NEXT_PUBLIC_PRODUCT as ProductType) || "POCKET_PROMPT";
+const PRODUCT = (process.env.NEXT_PUBLIC_PRODUCT ??
+  "POCKET_PROMPT") as ProductType;
 
 export const colors = {
   white: "#FFFFFF",

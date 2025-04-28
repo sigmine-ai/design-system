@@ -1329,7 +1329,7 @@
     "@tailwindcss/oxide-win32-arm64-msvc" "4.1.4"
     "@tailwindcss/oxide-win32-x64-msvc" "4.1.4"
 
-"@tailwindcss/postcss@^4":
+"@tailwindcss/postcss@^4.1.4":
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/@tailwindcss/postcss/-/postcss-4.1.4.tgz#47b1eca69e6895026f694242a3b87bb2d3b06b80"
   integrity sha512-bjV6sqycCEa+AQSt2Kr7wpGF1bOZJ5wsqnLEkqSbM/JEHxx/yhMH8wHmdkPyApF9xhHeMSwnnkDUUMMM/hYnXw==
