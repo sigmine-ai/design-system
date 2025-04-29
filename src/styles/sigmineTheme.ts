@@ -1,53 +1,5 @@
 import { css, keyframes } from "styled-components";
 
-const primaryColorsByProduct = {
-  POCKET_PROMPT: {
-    primary: "#7580EA",
-    primary_dark: "#535DBF",
-    primary_xdark: "#27339E",
-    primary_xxdark: "#252E7C",
-    primary_light: "#9EADFC",
-    primary_xlight: "#CEDEFF",
-    primary_100: "#7580EA",
-    primary_90: "#BBC0F5",
-    primary_80: "#9199EE",
-    primary_70: "#9FA7F1",
-    primary_60: "#ACB3F2",
-    primary_50: "#BBC0F5",
-    primary_40: "#C8CCF7",
-    primary_30: "#D6D9F9",
-    primary_20: "#E3E6FB",
-    primary_10: "#F2F3FD",
-    primary_5: "#F8F8FE",
-    primary_xxlight: "#E3E6FB",
-  },
-  SIGMINE: {
-    primary: "#5872F9",
-    primary_dark: "#3B4BD4",
-    primary_xdark: "#27339E",
-    primary_xxdark: "#252E7C",
-    primary_100: "#5872F9",
-    primary_90: "#6981FA",
-    primary_80: "#798EFA",
-    primary_70: "#889DFB",
-    primary_60: "#9BAAFB",
-    primary_50: "#ACB9FC",
-    primary_40: "#BCC7FD",
-    primary_30: "#CDD5FE",
-    primary_20: "#DEE3FE",
-    primary_10: "#EFF1FF",
-    primary_5: "#F6F8FE",
-    primary_light: "#9EADFC",
-    primary_xlight: "#CEDEFF",
-    primary_xxlight: "#E3E6FB",
-  },
-} as const;
-
-type ProductType = keyof typeof primaryColorsByProduct; // "POCKET_PROMPT" | "SIGMINE"
-
-const PRODUCT = (process.env.NEXT_PUBLIC_PRODUCT ??
-  "POCKET_PROMPT") as ProductType;
-
 export const colors = {
   white: "#FFFFFF",
   black: "#060812",
@@ -73,7 +25,24 @@ export const colors = {
   primary_transparent_20: "rgba(88, 114, 249, 0.2)",
   primary_transparent_10: "rgba(88, 114, 249, 0.1)",
   primary_transparent_5: "rgba(88, 114, 249, 0.05)",
-  ...primaryColorsByProduct[PRODUCT],
+  primary: "#5872F9",
+  primary_dark: "#3B4BD4",
+  primary_xdark: "#27339E",
+  primary_xxdark: "#252E7C",
+  primary_100: "#5872F9",
+  primary_90: "#6981FA",
+  primary_80: "#798EFA",
+  primary_70: "#889DFB",
+  primary_60: "#9BAAFB",
+  primary_50: "#ACB9FC",
+  primary_40: "#BCC7FD",
+  primary_30: "#CDD5FE",
+  primary_20: "#DEE3FE",
+  primary_10: "#EFF1FF",
+  primary_5: "#F6F8FE",
+  primary_light: "#9EADFC",
+  primary_xlight: "#CEDEFF",
+  primary_xxlight: "#E3E6FB",
 };
 
 export const fonts = {

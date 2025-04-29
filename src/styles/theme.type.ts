@@ -1,5 +1,5 @@
 import { css } from "styled-components";
-import { colors, fonts } from "./theme";
+import { colors, fonts } from "./pocketPromptTheme";
 
 type CssReturnType = ReturnType<typeof css>;
 
