@@ -1,4 +1,7 @@
-import type { StorybookConfig } from "@storybook/experimental-nextjs-vite";
+import type { StorybookConfig } from "@storybook/react-vite";
+import path from "path";
+
+const PRODUCT = process.env.PRODUCT || "POCKET_PROMPT";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -9,7 +12,7 @@ const config: StorybookConfig = {
     "@storybook/experimental-addon-test",
   ],
   framework: {
-    name: "@storybook/experimental-nextjs-vite",
+    name: "@storybook/react-vite",
     options: {},
   },
   staticDirs: ["../public"],
@@ -21,15 +24,20 @@ const config: StorybookConfig = {
     plugins: ["babel-plugin-styled-components"],
   }),
   viteFinal: async (config) => {
-    config.resolve = {
-      ...config.resolve,
-      alias: {
-        ...(config.resolve?.alias || {}),
-        "@": "/src",
+    return {
+      ...config,
+      define: {
+        ...(config.define || {}),
+        __PRODUCT__: JSON.stringify(PRODUCT), // 여기에 PRODUCT 주입
+      },
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...(config.resolve?.alias || {}),
+          "@": path.resolve(__dirname, "../src"), // alias "@/src" 세팅
+        },
       },
     };
-
-    return config;
   },
 };
 export default config;

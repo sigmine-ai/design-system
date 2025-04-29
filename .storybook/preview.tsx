@@ -1,13 +1,7 @@
 import * as React from "react";
 import type { Preview } from "@storybook/react";
 import { ThemeProvider } from "styled-components";
-import theme from "../src/styles/theme";
-
-if (typeof window !== "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).NEXT_PUBLIC_PRODUCT =
-    process.env.NEXT_PUBLIC_PRODUCT || "POCKET_PROMPT";
-}
+import theme from "../src/styles/index";
 
 const preview: Preview = {
   parameters: {
