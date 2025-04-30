@@ -33,8 +33,6 @@ const PocketPromptButton = forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 
-PocketPromptButton.displayName = "PocketPromptButton";
-
 export default PocketPromptButton;
 
 const StyledButton = styled.button<{

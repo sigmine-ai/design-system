@@ -1,8 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import path from "path";
 
-const PRODUCT = process.env.PRODUCT || "POCKET_PROMPT";
-
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
@@ -26,10 +24,6 @@ const config: StorybookConfig = {
   viteFinal: async (config) => {
     return {
       ...config,
-      define: {
-        ...(config.define || {}),
-        __PRODUCT__: JSON.stringify(PRODUCT), // 여기에 PRODUCT 주입
-      },
       resolve: {
         ...config.resolve,
         alias: {

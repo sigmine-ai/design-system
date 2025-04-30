@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import SigmineButton from "./SigmineButton";
+import Button from "./Button";
 
-const meta: Meta<typeof SigmineButton> = {
-  title: "Components/SigmineButton",
-  component: SigmineButton,
+const meta: Meta<typeof Button> = {
+  title: "Components/Button",
+  component: Button,
   tags: ["autodocs"],
   args: {
     children: "Button",
@@ -12,7 +12,7 @@ const meta: Meta<typeof SigmineButton> = {
 
 export default meta;
 
-type Story = StoryObj<typeof SigmineButton>;
+type Story = StoryObj<typeof Button>;
 
 export const Primary: Story = {
   args: {
@@ -29,12 +29,6 @@ export const Secondary: Story = {
 export const Normal: Story = {
   args: {
     hierarchy: "normal",
-  },
-};
-
-export const Gray: Story = {
-  args: {
-    hierarchy: "gray",
   },
 };
 

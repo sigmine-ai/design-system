@@ -1,5 +1,7 @@
 import { defineConfig } from "tsup";
 
+const isStorybook = process.env.STORYBOOK === "true";
+
 export default defineConfig({
   entry: ["src/index.ts"],
   format: ["esm"],
@@ -7,8 +9,5 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: "es2020",
-  external: ["react", "react-dom"],
-  define: {
-    __PRODUCT__: JSON.stringify(process.env.PRODUCT ?? "POCKET_PROMPT"),
-  },
+  external: isStorybook ? [] : ["react", "react-dom"],
 });

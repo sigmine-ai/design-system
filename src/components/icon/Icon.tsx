@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import theme from "@/styles";
+import theme from "@/styles/theme";
 import * as Icons from "iconsax-react";
 
 export type IconNameType =
