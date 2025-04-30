@@ -10,9 +10,9 @@ React + styled-components 기반으로 작성되었으며, npm 패키지로 배�
 
 ```bash
 yarn add ai-surfers-design-system
-```
 
----
+// ⚠️ react, react-dom, styled-components는 peerDependencies로, 사용자 프로젝트에 이미 설치되어 있어야 합니다.
+```
 
 ## 🛠️ 사용 예시
 
@@ -31,14 +31,14 @@ function MyComponent() {
 ### 1. 개발 환경 실행
 
 ```bash
-npm install
-npm yarn storybook  # Storybook 실행
+yarn install
+yarn storybook  # Storybook 실행
 ```
 
 ### 2. 빌드
 
 ```bash
-npm yarn build      # tsup 기반 라이브러리 번들 빌드
+yarn build      # tsup 기반 라이브러리 번들 빌드
 ```
 
 ### 3. 배포 (버전 업데이트 후)
@@ -54,13 +54,14 @@ npm publish
 
 ```
 ai-surfers-design-system/
-├── src/                  # 주요 컴포넌트 소스
-│   ├── components/       # Button, Input 등 UI 컴포넌트
-│   │   ├── stories/      # 각 UI별 Storybook 문서
-│   └── index.ts          # 컴포넌트 export 진입점
-├── dist/                 # 빌드 결과물
-├── tsup.config.ts        # 라이브러리 빌드 설정
-├── vite.config.ts        # 개발 및 SSR 대응 설정
+├── src/                            # 주요 컴포넌트 소스
+│   ├── components/                 # Button, Input 등 UI 컴포넌트
+│   │   │   ├── Button.tsx
+│   │   │   └── Button.stories.tsx  # 컴포넌트별 Storybook
+│   └── index.ts                    # 컴포넌트 export 진입점
+├── dist/                           # 빌드 결과물
+├── tsup.config.ts                  # 라이브러리 빌드 설정
+├── vite.config.ts                  # 개발 및 SSR 대응 설정
 └── README.md
 ```
 
