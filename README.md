@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Surfers Design System
 
-## Getting Started
+PocketPrompt 및 Sigmine 제품에서 사용하는 UI 컴포넌트 디자인 시스템입니다.  
+React + styled-components 기반으로 작성되었으며, npm 패키지로 배포되었습니다.
+[npm 패키지 바로가기](https://www.npmjs.com/package/ai-surfers-design-system)
 
-First, run the development server:
+---
+
+## 📦 설치 방법
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn add ai-surfers-design-system
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ 사용 예시
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```tsx
+import { Button } from "ai-surfers-design-system";
 
-## Learn More
+function MyComponent() {
+  return <Button variant="primary">Click me</Button>;
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧑‍💻 라이브러리 개발 및 배포 방법
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. 개발 환경 실행
 
-## Deploy on Vercel
+```bash
+npm install
+npm yarn storybook  # Storybook 실행
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. 빌드
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm yarn build      # tsup 기반 라이브러리 번들 빌드
+```
+
+### 3. 배포 (버전 업데이트 후)
+
+```bash
+npm login
+npm publish
+```
+
+---
+
+## 📁 프로젝트 구조
+
+```
+ai-surfers-design-system/
+├── src/                  # 주요 컴포넌트 소스
+│   ├── components/       # Button, Input 등 UI 컴포넌트
+│   │   ├── stories/      # 각 UI별 Storybook 문서
+│   └── index.ts          # 컴포넌트 export 진입점
+├── dist/                 # 빌드 결과물
+├── tsup.config.ts        # 라이브러리 빌드 설정
+├── vite.config.ts        # 개발 및 SSR 대응 설정
+└── README.md
+```
+
+---
+
+## ✅ 기술 스택
+
+- React 18 이상
+- styled-components
+- Vite
+- Storybook
+- tsup (라이브러리 번들러)
