@@ -11,7 +11,7 @@ type ButtonProps = {
   children?: React.ReactNode;
 } & HTMLAttributes<HTMLButtonElement>;
 
-const PocketPromptButton = forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     { size = 56, width, hierarchy = "primary", suffix, children, ...props },
     ref
@@ -33,7 +33,7 @@ const PocketPromptButton = forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 
-export default PocketPromptButton;
+export default Button;
 
 const StyledButton = styled.button<{
   width?: string;
