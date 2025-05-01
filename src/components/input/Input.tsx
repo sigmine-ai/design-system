@@ -1,9 +1,10 @@
 "use client";
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import styled from "styled-components";
 
 export interface InputProps {
+  error?: boolean;
   id?: string;
   placeholder?: string;
   value: string;
@@ -16,6 +17,7 @@ export interface InputProps {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      error = false,
       placeholder,
       value = "",
       onChange,
@@ -26,6 +28,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
+    const [isError, setIsError] = useState(error);
+
+    const handleClick = () => {
+      setIsError(false);
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
 
@@ -40,7 +48,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <InputContainer $length={value.length} $disabled={disabled}>
+      <InputContainer
+        $length={value.length}
+        $disabled={disabled}
+        $error={isError}
+      >
         <StyledInput
           ref={ref}
           placeholder={placeholder}
@@ -48,6 +60,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           disabled={disabled}
+          $error={isError}
+          onClick={handleClick}
           {...props}
         />
         {count !== undefined && (
@@ -62,7 +76,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
 export default Input;
 
-const InputContainer = styled.div<{ $length: number; $disabled?: boolean }>`
+const InputContainer = styled.div<{
+  $length: number;
+  $disabled?: boolean;
+  $error: boolean;
+}>`
   display: flex;
   align-items: center;
   padding: 11px 12px;
@@ -76,6 +94,12 @@ const InputContainer = styled.div<{ $length: number; $disabled?: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.primary_20};
   background: ${({ theme, $length }) =>
     $length > 0 ? theme.colors.primary_10 : theme.colors.white};
+  ${({ $error }) =>
+    $error &&
+    `
+      border: 1px solid rgba(246, 78, 57, 0.30); 
+      background: rgba(246, 78, 57, 0.05); 
+    `}
 
   &:hover {
     background: ${({ theme }) => theme.colors.primary_10};
@@ -96,7 +120,7 @@ const InputContainer = styled.div<{ $length: number; $disabled?: boolean }>`
         `}
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{ $error: boolean }>`
   flex: 1;
   border: none;
   background: transparent;
@@ -114,6 +138,13 @@ const StyledInput = styled.input`
       color: ${({ theme }) => theme.colors.G_300};
     }
   }
+  ${({ $error }) =>
+    $error &&
+    `
+      &::placeholder {
+        color: rgba(246, 78, 57, 0.30);
+      }
+    `}
 `;
 
 const CountBox = styled.div<{ $length: number }>`
