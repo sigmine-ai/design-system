@@ -15,12 +15,12 @@ interface IconProps {
   onClick?: () => void;
 }
 
-export default function Icon({
+const Icon: React.FC<IconProps> = ({
   name,
   color = "primary",
   size = 20,
   onClick,
-}: IconProps) {
+}: IconProps) => {
   const hexColor = theme.colors[color];
 
   // name이 문자열이면 iconsax-react의 해당 아이콘 컴포넌트를 사용하고,
@@ -36,4 +36,6 @@ export default function Icon({
       style={{ pointerEvents: "none" }}
     />
   );
-}
+};
+
+export default Icon;

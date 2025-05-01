@@ -10,13 +10,14 @@ interface TextProps extends HTMLAttributes<HTMLDivElement> {
   color: keyof ThemeColors;
   markdown?: boolean;
 }
-export default function Text({
+
+const Text: React.FC<TextProps> = ({
   font,
   color = "black",
   children,
   markdown = false,
   ...props
-}: PropsWithChildren<TextProps>) {
+}: PropsWithChildren<TextProps>) => {
   return (
     <StyledText
       $font={font}
@@ -35,7 +36,9 @@ export default function Text({
       )}
     </StyledText>
   );
-}
+};
+
+export default Text;
 
 const StyledText = styled.div<{
   $font: keyof ThemeFonts;
