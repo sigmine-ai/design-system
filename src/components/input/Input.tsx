@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 export interface InputProps {
@@ -46,6 +46,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         onEnter();
       }
     };
+
+    useEffect(() => {
+      setIsError(error);
+    }, [error]);
 
     return (
       <InputContainer
