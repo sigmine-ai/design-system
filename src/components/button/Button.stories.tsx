@@ -43,3 +43,15 @@ export const Disabled: Story = {
     hierarchy: "disabled",
   },
 };
+
+export const SigminePrimary: Story = {
+  args: {
+    hierarchy: "sigminePrimary",
+  },
+};
+
+export const sigmineSecondary: Story = {
+  args: {
+    hierarchy: "sigmineSecondary",
+  },
+};

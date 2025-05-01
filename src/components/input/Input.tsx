@@ -1,7 +1,7 @@
 "use client";
 
 import React, { forwardRef, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export interface InputProps {
   error?: boolean;
@@ -12,6 +12,7 @@ export interface InputProps {
   count?: number;
   disabled?: boolean;
   onEnter?: () => void;
+  hierarchy?: "default" | "sigmine";
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -24,6 +25,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       count,
       disabled = false,
       onEnter,
+      hierarchy = "default",
       ...props
     },
     ref
@@ -56,6 +58,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         $length={value.length}
         $disabled={disabled}
         $error={isError}
+        $hierarchy={hierarchy}
       >
         <StyledInput
           ref={ref}
@@ -84,6 +87,7 @@ const InputContainer = styled.div<{
   $length: number;
   $disabled?: boolean;
   $error: boolean;
+  $hierarchy: "default" | "sigmine";
 }>`
   display: flex;
   align-items: center;
@@ -93,11 +97,40 @@ const InputContainer = styled.div<{
 
   ${({ theme }) => theme.fonts.b3_14_reg};
   transition: all 0.1s;
-
   border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.primary_20};
-  background: ${({ theme, $length }) =>
-    $length > 0 ? theme.colors.primary_10 : theme.colors.white};
+
+  ${({ $hierarchy, theme, $length }) => {
+    switch ($hierarchy) {
+      case "default":
+        return css`
+          background: ${$length > 0
+            ? theme.colors.primary_10
+            : theme.colors.white};
+
+          border: 1px solid ${theme.colors.primary_20};
+
+          &:hover {
+            background: ${theme.colors.primary_10};
+          }
+
+          &:focus-within {
+            background: ${({ theme }) => theme.colors.primary_10};
+            border: 1px solid ${({ theme }) => theme.colors.primary_60};
+          }
+        `;
+      case "sigmine":
+        return css`
+          background: ${$length > 0
+            ? theme.colors.sigmine_primary_5
+            : theme.colors.white};
+          border: 1px solid ${theme.colors.sigmine_primary_20};
+
+          &:focus-within {
+            border: 1px solid ${theme.colors.sigmine_primary_40};
+          }
+        `;
+    }
+  }}
   ${({ $error }) =>
     $error &&
     `
@@ -105,23 +138,14 @@ const InputContainer = styled.div<{
       background: rgba(246, 78, 57, 0.05); 
     `}
 
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary_10};
-  }
-
-  &:focus-within {
-    background: ${({ theme }) => theme.colors.primary_10};
-    border: 1px solid ${({ theme }) => theme.colors.primary_60};
-  }
-
   ${({ $disabled, theme }) =>
     $disabled &&
     `
-            background: ${theme.colors.G_100};
-            border: 1px solid ${theme.colors.G_100};
-            color: ${theme.colors.G_300};
-            pointer-events: none;
-        `}
+      background: ${theme.colors.G_100};
+      border: 1px solid ${theme.colors.G_100};
+      color: ${theme.colors.G_300};
+      pointer-events: none;
+    `}
 `;
 
 const StyledInput = styled.input<{ $error: boolean }>`

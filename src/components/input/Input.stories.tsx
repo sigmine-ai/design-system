@@ -10,6 +10,11 @@ const meta: Meta<typeof Input> = {
     placeholder: "텍스트를 입력하세요",
     count: 100,
   },
+  argTypes: {
+    hierarchy: {
+      options: ["default", "sigmine"],
+    },
+  },
 };
 
 export default meta;
@@ -22,6 +27,16 @@ const InputStory = (args: React.ComponentProps<typeof Input>) => {
   return <Input {...args} value={value} onChange={(v) => setValue(v)} />;
 };
 
-export const Primary: Story = {
+export const Default: Story = {
   render: (args) => <InputStory {...args} />,
+  args: {
+    hierarchy: "default",
+  },
+};
+
+export const Sigmine: Story = {
+  render: (args) => <InputStory {...args} />,
+  args: {
+    hierarchy: "sigmine",
+  },
 };

@@ -3,10 +3,19 @@
 import { HTMLAttributes, forwardRef } from "react";
 import styled, { css } from "styled-components";
 
+type ButtonHierachy =
+  | "primary"
+  | "secondary"
+  | "normal"
+  | "disabled"
+  | "default"
+  | "sigminePrimary"
+  | "sigmineSecondary";
+
 type ButtonProps = {
   size?: number;
   width?: string;
-  hierarchy?: "primary" | "secondary" | "normal" | "disabled" | "default";
+  hierarchy?: ButtonHierachy;
   suffix?: React.ReactNode;
   children?: React.ReactNode;
 } & HTMLAttributes<HTMLButtonElement>;
@@ -106,6 +115,29 @@ const StyledButton = styled.button<{
           background: ${theme.colors.G_100};
           color: ${theme.colors.G_300};
           pointer-events: none;
+        `;
+      case "sigminePrimary":
+        return css`
+          background: ${theme.colors.sigmine_primary};
+          color: ${theme.colors.white};
+
+          &:hover {
+            box-shadow: inset 0 0 0 4px ${theme.colors.primary_30};
+          }
+
+          &:active {
+            background: ${theme.colors.sigmine_primary_dark};
+          }
+        `;
+      case "sigmineSecondary":
+        return css`
+          background: ${theme.colors.white};
+          color: ${theme.colors.sigmine_primary};
+          border: 1.5px solid ${theme.colors.sigmine_primary_20};
+
+          &:active {
+            background: ${theme.colors.sigmine_primary_10};
+          }
         `;
       default:
         return css`
