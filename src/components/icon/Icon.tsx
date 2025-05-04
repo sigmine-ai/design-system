@@ -19,6 +19,7 @@ interface IconProps {
   color?: keyof typeof theme.colors;
   size?: number;
   onClick?: () => void;
+  variant: "Linear" | "Outline" | "Broken" | "Bold" | "Bulk" | "TwoTone";
 }
 
 const Icon: React.FC<IconProps> = ({
@@ -26,6 +27,7 @@ const Icon: React.FC<IconProps> = ({
   color = "primary",
   size = 20,
   onClick,
+  variant,
 }: IconProps) => {
   const hexColor = theme.colors[color];
 
@@ -50,6 +52,7 @@ const Icon: React.FC<IconProps> = ({
       size={size}
       onClick={onClick}
       style={{ pointerEvents: "none" }}
+      variant={variant}
     />
   );
 };
