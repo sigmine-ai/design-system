@@ -3,30 +3,30 @@
 import React, { forwardRef, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 
-export interface InputProps {
-  error?: boolean;
-  id?: string;
+export interface TextareaProps {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
   count?: number;
   disabled?: boolean;
-  onEnter?: () => void;
+  isMini?: boolean;
+  defaultHeight?: string;
   hierarchy?: "default" | "sigmine";
+  error?: boolean;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
     {
-      error = false,
       placeholder,
       value = "",
       onChange,
       count,
       disabled = false,
-      onEnter,
+      isMini = false,
+      defaultHeight,
+      error = true,
       hierarchy = "default",
-      ...props
     },
     ref
   ) => {
@@ -36,67 +36,70 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       setIsError(false);
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = e.target.value;
+    function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+      const value = e.target.value;
+      if (count && value.length > count) return;
+      onChange(value);
 
-      if (count && inputValue.length > count) return;
-      onChange(inputValue);
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter" && onEnter) {
-        onEnter();
+      // 높이 자동 조절
+      if (isMini) {
+        e.target.style.height = "auto";
+        e.target.style.height = `${e.target.scrollHeight}px`;
       }
-    };
+    }
 
     useEffect(() => {
       setIsError(error);
     }, [error]);
 
     return (
-      <InputContainer
+      <TextareaContainer
         $length={value.length}
         $disabled={disabled}
         $error={isError}
         $hierarchy={hierarchy}
       >
-        <StyledInput
+        <StyledTextarea
           ref={ref}
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
           disabled={disabled}
+          $isMini={isMini}
+          rows={isMini ? 1 : undefined}
+          $defaultHeight={defaultHeight}
           $error={isError}
           onClick={handleClick}
-          {...props}
         />
-        {count !== undefined && (
+        {count && (
           <CountBox $length={value.length}>
             <b>{value.length}</b>/{count}
           </CountBox>
         )}
-      </InputContainer>
+      </TextareaContainer>
     );
   }
 );
 
-export default Input;
+export default Textarea;
 
-const InputContainer = styled.div<{
+const TextareaContainer = styled.div<{
   $length: number;
   $disabled?: boolean;
   $error: boolean;
   $hierarchy: "default" | "sigmine";
 }>`
-  display: flex;
-  align-items: center;
-  padding: 11px 12px;
-  margin-top: 8px;
-  flex: 1;
+  position: relative;
 
-  ${({ theme }) => theme.fonts.b3_14_reg};
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+
+  gap: 1px;
+  padding: 11px 12px;
+
   transition: all 0.1s;
+
   border-radius: 8px;
 
   ${({ $hierarchy, theme, $length }) => {
@@ -131,52 +134,64 @@ const InputContainer = styled.div<{
         `;
     }
   }}
-  ${({ $error }) =>
-    $error &&
-    `
-      border: 1px solid rgba(246, 78, 57, 0.30); 
-      background: rgba(246, 78, 57, 0.05);
-    `}
 
   ${({ $disabled, theme }) =>
     $disabled &&
-    `
+    css`
       background: ${theme.colors.G_100};
       border: 1px solid ${theme.colors.G_100};
-      color: ${theme.colors.G_300};
       pointer-events: none;
     `}
+
+  ${({ $error }) =>
+    $error &&
+    `
+          border: 1px solid rgba(246, 78, 57, 0.30); 
+          background: rgba(246, 78, 57, 0.05);
+        `}
 `;
 
-const StyledInput = styled.input<{ $error: boolean }>`
-  flex: 1;
+const StyledTextarea = styled.textarea<{
+  $isMini: boolean;
+  $defaultHeight?: string;
+  $error: boolean;
+}>`
+  ${({ theme }) => theme.fonts.b3_14_reg};
+  height: ${({ $isMini, $defaultHeight }) =>
+    $isMini ? "23px" : $defaultHeight || "87px"};
+  min-height: 23px;
+  max-height: 300px;
+
   border: none;
   background: transparent;
   outline: none;
   color: ${({ theme }) => theme.colors.black};
+  resize: vertical;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.primary_60};
   }
 
   &:disabled {
+    resize: none;
     color: ${({ theme }) => theme.colors.G_300};
 
     &::placeholder {
       color: ${({ theme }) => theme.colors.G_300};
     }
   }
+
   ${({ $error }) =>
     $error &&
     `
-      &::placeholder {
-        color: rgba(246, 78, 57, 0.30);
-      }
-    `}
+          &::placeholder {
+            color: rgba(246, 78, 57, 0.30);
+          }
+        `}
 `;
 
-const CountBox = styled.div<{ $length: number }>`
-  margin-left: 8px;
+const CountBox = styled.span<{ $length: number }>`
+  align-self: flex-end;
   ${({ theme }) => theme.fonts.c1_12_reg};
   color: ${({ theme }) => theme.colors.G_300};
 
