@@ -5,7 +5,7 @@ import theme from "@/styles/theme";
 import * as Icons from "iconsax-react";
 import SimpleCheck from "../../../public/icons/SimpleCheck";
 import SimpleX from "../../../public/icons/SimpleX";
-import SimpleArrowUpRight from "../../../public/icons/SimpleArrowUpRight copy";
+import SimpleArrowUpRight from "../../../public/icons/SimpleArrowUpRight";
 
 export type IconNameType =
   | keyof typeof Icons
