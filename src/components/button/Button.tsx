@@ -9,6 +9,7 @@ type ButtonHierachy =
   | "normal"
   | "disabled"
   | "default"
+  | "gray"
   | "sigminePrimary"
   | "sigmineSecondary";
 
@@ -99,6 +100,16 @@ const StyledButton = styled.button<{
 
           &:hover {
             background: ${theme.colors.primary_20};
+          }
+        `;
+      case "gray":
+        return css`
+          background: ${theme.colors.G_50};
+          color: ${theme.colors.G_600};
+          border: 1.5px solid ${theme.colors.G_100};
+
+          &:hover {
+            box-shadow: inset 0 0 0 3px ${theme.colors.primary_20};
           }
         `;
       case "default":

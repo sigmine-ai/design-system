@@ -32,6 +32,12 @@ export const Normal: Story = {
   },
 };
 
+export const Gray: Story = {
+  args: {
+    hierarchy: "gray",
+  },
+};
+
 export const Default: Story = {
   args: {
     hierarchy: "default",
