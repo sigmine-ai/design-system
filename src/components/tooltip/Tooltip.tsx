@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactNode, useState } from "react";
 import styled from "styled-components";
 
@@ -9,7 +11,11 @@ interface TooltipProps {
   position?: TooltipPosition;
 }
 
-const Tooltip = ({ content, children, position = "top" }: TooltipProps) => {
+const Tooltip: React.FC<TooltipProps> = ({
+  content,
+  children,
+  position = "top",
+}: TooltipProps) => {
   const [visible, setVisible] = useState(false);
 
   return (

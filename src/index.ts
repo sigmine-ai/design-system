@@ -4,4 +4,5 @@ export { default as Textarea } from "./components/textArea/Textarea";
 export { default as Button } from "./components/button/Button";
 export { default as Input } from "./components/input/Input";
 export { default as theme } from "./styles/theme";
+export { default as Tooltip } from "./components/tooltip/Tooltip";
 export * from "./styles/theme.type";
