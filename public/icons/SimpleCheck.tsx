@@ -2,17 +2,17 @@ import * as React from "react";
 
 const SimpleCheck = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
     {...props}
   >
     <path
-      d="M20 6L9 17L4 12"
-      stroke="black"
-      stroke-width="2"
+      d="M13.3334 4L6.00008 11.3333L2.66675 8"
+      stroke="#818491"
+      stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
     />

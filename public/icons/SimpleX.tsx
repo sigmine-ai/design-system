@@ -10,15 +10,15 @@ const SimpleX = (props: React.SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path
-      d="M18 6L6 18"
-      stroke="black"
+      d="M12 4L4 12"
+      stroke="#3E4151"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
-      d="M6 6L18 18"
-      stroke="black"
+      d="M4 4L12 12"
+      stroke="#3E4151"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
