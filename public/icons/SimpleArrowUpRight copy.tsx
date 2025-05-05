@@ -8,6 +8,7 @@ const SimpleArrowUpRight = (props: React.SVGProps<SVGSVGElement>) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M7 17L17 7"
