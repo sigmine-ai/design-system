@@ -1,12 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Button from "./Button";
+import Icon from "../icon/Icon";
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
   component: Button,
   tags: ["autodocs"],
   args: {
-    children: "Button",
+    children: <Icon name="SimpleX" variant="Linear" size={16} />,
+    style: { padding: "7.5px" },
   },
 };
 

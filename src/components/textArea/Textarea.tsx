@@ -25,7 +25,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       disabled = false,
       isMini = false,
       defaultHeight,
-      error = true,
+      error = false,
       hierarchy = "default",
     },
     ref
