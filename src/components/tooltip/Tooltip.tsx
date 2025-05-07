@@ -50,7 +50,7 @@ const TooltipBox = styled.div<{ $position: TooltipPosition }>`
   padding: 8px 16px;
   border-radius: 8px;
   white-space: nowrap;
-  width: 100%;
+  width: fit-content;
 
   ${({ $position }) =>
     ({

@@ -24,7 +24,7 @@ type Story = StoryObj<typeof Tooltip>;
 export const Default: Story = {
   args: {
     content: (
-      <Text font="b3_14_med" color="white">
+      <Text font="b3_14_med" color="white" style={{ whiteSpace: "nowrap" }}>
         Tooltip TooltipTooltipTooltipTooltipTooltip
         TooltipTooltipTooltipTooltipTooltip
       </Text>
