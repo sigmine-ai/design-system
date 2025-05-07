@@ -25,7 +25,8 @@ export const Default: Story = {
   args: {
     content: (
       <Text font="b3_14_med" color="white">
-        Tooltip
+        Tooltip TooltipTooltipTooltipTooltipTooltip
+        TooltipTooltipTooltipTooltipTooltip
       </Text>
     ),
     position: "top",

@@ -39,6 +39,7 @@ export default Tooltip;
 const Wrapper = styled.span`
   position: relative;
   display: inline-block;
+  width: fit-content;
 `;
 
 const TooltipBox = styled.div<{ $position: TooltipPosition }>`
@@ -49,6 +50,7 @@ const TooltipBox = styled.div<{ $position: TooltipPosition }>`
   padding: 8px 16px;
   border-radius: 8px;
   white-space: nowrap;
+  width: 100%;
 
   ${({ $position }) =>
     ({
@@ -56,25 +58,25 @@ const TooltipBox = styled.div<{ $position: TooltipPosition }>`
         bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
-        margin-bottom: 8px;
+        margin-bottom: 19px;
       `,
       bottom: `
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
-        margin-top: 8px;
+        margin-top: 19px;
       `,
       left: `
         right: 100%;
         top: 50%;
         transform: translateY(-50%);
-        margin-right: 8px;
+        margin-right: 19px;
       `,
       right: `
         left: 100%;
         top: 50%;
         transform: translateY(-50%);
-        margin-left: 8px;
+        margin-left: 19px;
       `,
     }[$position])}
 `;
