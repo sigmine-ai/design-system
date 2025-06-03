@@ -157,7 +157,7 @@ const StyledButton = styled.button<{
           color: ${theme.colors.G_600};
           border: 1px solid ${theme.colors.G_100};
 
-          &:active {
+          &:hover {
             background: ${theme.colors.sigmine_primary_10};
             color: ${theme.colors.sigmine_primary};
             border: 1px solid ${theme.colors.sigmine_primary_20};

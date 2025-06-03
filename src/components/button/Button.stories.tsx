@@ -7,7 +7,7 @@ const meta: Meta<typeof Button> = {
   component: Button,
   tags: ["autodocs"],
   args: {
-    children: <Icon name="SimpleX" variant="Linear" size={16} />,
+    children: "버튼",
     style: { padding: "7.5px" },
   },
 };
