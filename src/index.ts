@@ -6,3 +6,4 @@ export { default as Input } from "./components/input/Input";
 export { default as theme } from "./styles/theme";
 export { default as Tooltip } from "./components/tooltip/Tooltip";
 export * from "./styles/theme.type";
+export type { IconNameType } from "./components/icon/Icon";
