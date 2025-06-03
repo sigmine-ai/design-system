@@ -58,8 +58,14 @@ export const SigminePrimary: Story = {
   },
 };
 
-export const sigmineSecondary: Story = {
+export const SigmineSecondary: Story = {
   args: {
     hierarchy: "sigmineSecondary",
+  },
+};
+
+export const SigmineDefault: Story = {
+  args: {
+    hierarchy: "sigmineDefault",
   },
 };

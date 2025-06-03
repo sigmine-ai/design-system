@@ -11,7 +11,8 @@ type ButtonHierachy =
   | "default"
   | "gray"
   | "sigminePrimary"
-  | "sigmineSecondary";
+  | "sigmineSecondary"
+  | "sigmineDefault";
 
 type ButtonProps = {
   size?: number;
@@ -148,6 +149,18 @@ const StyledButton = styled.button<{
 
           &:active {
             background: ${theme.colors.sigmine_primary_10};
+          }
+        `;
+      case "sigmineDefault":
+        return css`
+          background: ${theme.colors.G_50};
+          color: ${theme.colors.G_600};
+          border: 1px solid ${theme.colors.G_100};
+
+          &:active {
+            background: ${theme.colors.sigmine_primary_10};
+            color: ${theme.colors.sigmine_primary};
+            border: 1px solid ${theme.colors.sigmine_primary_20};
           }
         `;
       default:
