@@ -6,8 +6,9 @@ const meta: Meta<typeof Icon> = {
   component: Icon,
   tags: ["autodocs"],
   args: {
-    name: "MessageQuestion",
+    name: "HealthCare",
     variant: "Bulk",
+    color: "G_500",
   },
 };
 

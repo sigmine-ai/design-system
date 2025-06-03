@@ -6,12 +6,14 @@ import * as Icons from "iconsax-react";
 import SimpleCheck from "../../../public/icons/SimpleCheck";
 import SimpleX from "../../../public/icons/SimpleX";
 import SimpleArrowUpRight from "../../../public/icons/SimpleArrowUpRight";
+import HealthCare from "../../../public/icons/HealthCare";
 
 export type IconNameType =
   | keyof typeof Icons
   | "SimpleCheck"
   | "SimpleX"
   | "SimpleArrowUpRight"
+  | "HealthCare"
   | React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 interface IconProps {
@@ -40,6 +42,7 @@ const Icon: React.FC<IconProps> = ({
     SimpleCheck,
     SimpleX,
     SimpleArrowUpRight,
+    HealthCare,
   };
 
   const IconComponent =
