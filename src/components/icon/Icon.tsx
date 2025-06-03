@@ -20,6 +20,7 @@ interface IconProps {
   size?: number;
   onClick?: () => void;
   variant: "Linear" | "Outline" | "Broken" | "Bold" | "Bulk" | "TwoTone";
+  className?: string;
 }
 
 const Icon: React.FC<IconProps> = ({
@@ -28,6 +29,7 @@ const Icon: React.FC<IconProps> = ({
   size = 20,
   onClick,
   variant,
+  className,
 }: IconProps) => {
   const hexColor = theme.colors[color];
 
@@ -53,6 +55,7 @@ const Icon: React.FC<IconProps> = ({
       onClick={onClick}
       style={{ pointerEvents: "none" }}
       variant={variant}
+      className={className}
     />
   );
 };
