@@ -13,9 +13,9 @@ const SimpleCheck = (props: React.SVGProps<SVGSVGElement>) => (
     <path
       d="M13.3334 4L6.00008 11.3333L2.66675 8"
       stroke="#818491"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );

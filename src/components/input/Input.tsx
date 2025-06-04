@@ -92,7 +92,6 @@ const InputContainer = styled.div<{
   display: flex;
   align-items: center;
   padding: 11px 12px;
-  margin-top: 8px;
   flex: 1;
 
   ${({ theme }) => theme.fonts.b3_14_reg};
