@@ -12,7 +12,7 @@ const SimpleCheck = (props: React.SVGProps<SVGSVGElement>) => (
   >
     <path
       d="M13.3334 4L6.00008 11.3333L2.66675 8"
-      stroke="#818491"
+      stroke={props.color ?? "#818491"}
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
