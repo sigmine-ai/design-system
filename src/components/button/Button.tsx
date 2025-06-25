@@ -20,11 +20,20 @@ type ButtonProps = {
   hierarchy?: ButtonHierachy;
   suffix?: React.ReactNode;
   children?: React.ReactNode;
+  type?: "button" | "submit" | "reset";
 } & HTMLAttributes<HTMLButtonElement>;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { size = 56, width, hierarchy = "primary", suffix, children, ...props },
+    {
+      size = 56,
+      width,
+      hierarchy = "primary",
+      suffix,
+      children,
+      type = "submit",
+      ...props
+    },
     ref
   ) => {
     return (
@@ -35,7 +44,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         $hierarchy={hierarchy}
         disabled={hierarchy === "disabled"}
         {...props}
-        type="submit"
+        type={type}
       >
         {children}
         {suffix && suffix}
