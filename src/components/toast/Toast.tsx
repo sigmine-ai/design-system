@@ -8,7 +8,7 @@ interface ToastProps {
   onClose?: () => void;
 }
 
-export const Toast: React.FC<ToastProps> = ({
+const Toast: React.FC<ToastProps> = ({
   children,
   duration = 2000,
   onClose,
@@ -50,6 +50,8 @@ export const Toast: React.FC<ToastProps> = ({
     </AnimatePresence>
   );
 };
+
+export default Toast;
 
 const ToastWrapper = styled.div`
   background: ${({ theme }) => theme.colors.G_700};
