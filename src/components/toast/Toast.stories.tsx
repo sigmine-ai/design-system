@@ -1,8 +1,8 @@
 // Toast.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toast } from "./Toast";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import Toast from "./Toast";
 
 const meta: Meta<typeof Toast> = {
   title: "Components/Toast",

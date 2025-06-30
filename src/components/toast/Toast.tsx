@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
 interface ToastProps {
   children: React.ReactNode;
@@ -28,7 +29,9 @@ const Toast: React.FC<ToastProps> = ({
     if (onClose) onClose();
   };
 
-  return (
+  if (typeof window === "undefined") return null; // SSR 방어
+
+  return createPortal(
     <AnimatePresence onExitComplete={handleExitComplete}>
       {isVisible && (
         <motion.div
@@ -47,7 +50,8 @@ const Toast: React.FC<ToastProps> = ({
           <ToastWrapper>{children}</ToastWrapper>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
