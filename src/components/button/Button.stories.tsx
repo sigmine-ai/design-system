@@ -69,3 +69,9 @@ export const SigmineDefault: Story = {
     hierarchy: "sigmineDefault",
   },
 };
+
+export const sigmineNormal: Story = {
+  args: {
+    hierarchy: "sigmineNormal",
+  },
+};
