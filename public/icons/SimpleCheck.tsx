@@ -1,10 +1,14 @@
 import * as React from "react";
 
-const SimpleCheck = (props: React.SVGProps<SVGSVGElement>) => (
+interface SimpleCheckProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+}
+
+const SimpleCheck = ({ size = 16, ...props }: SimpleCheckProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
+    width={size}
+    height={size}
     viewBox="0 0 16 16"
     fill="none"
     {...props}

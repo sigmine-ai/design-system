@@ -6,9 +6,10 @@ const meta: Meta<typeof Icon> = {
   component: Icon,
   tags: ["autodocs"],
   args: {
-    name: "HealthCare",
+    name: "SimpleCheck",
     variant: "Bulk",
     color: "G_500",
+    size: 12,
   },
 };
 
