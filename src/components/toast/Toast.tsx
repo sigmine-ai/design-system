@@ -42,7 +42,7 @@ const Toast: React.FC<ToastProps> = ({
           style={{
             position: "fixed",
             top: 40,
-            left: "40%",
+            left: "50%",
             zIndex: 9999,
           }}
         >
