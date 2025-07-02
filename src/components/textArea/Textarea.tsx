@@ -52,7 +52,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       onChange(value);
 
       // 높이 자동 조절
-      if (!isMini) {
+      if (!isMini && !defaultHeight?.includes("px")) {
         e.target.style.height = "auto";
         e.target.style.height = `${e.target.scrollHeight}px`;
       }
