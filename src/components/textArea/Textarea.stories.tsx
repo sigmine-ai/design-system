@@ -33,6 +33,7 @@ export const Default: Story = {
   render: (args) => <TextareaStory {...args} />,
   args: {
     hierarchy: "default",
+    defaultHeight: "100px",
   },
 };
 

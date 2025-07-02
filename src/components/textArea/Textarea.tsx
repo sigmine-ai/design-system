@@ -63,6 +63,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     }, [error]);
 
     useEffect(() => {
+      if (defaultHeight?.includes("px")) return;
       adjustHeight(); // ✅ 초기 렌더링, 값 변경 시 높이 조절
     }, [value]);
 
