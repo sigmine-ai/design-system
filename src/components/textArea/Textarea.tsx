@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 export interface TextareaProps {
@@ -31,10 +31,20 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     ref
   ) => {
     const [isError, setIsError] = useState(error);
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     const handleClick = () => {
       setIsError(false);
     };
+
+    function adjustHeight() {
+      if (textareaRef.current && !isMini) {
+        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height = `${
+          textareaRef.current.scrollHeight + 20
+        }px`;
+      }
+    }
 
     function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
       const value = e.target.value;
@@ -42,7 +52,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       onChange(value);
 
       // 높이 자동 조절
-      if (isMini) {
+      if (!isMini) {
         e.target.style.height = "auto";
         e.target.style.height = `${e.target.scrollHeight}px`;
       }
@@ -52,6 +62,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       setIsError(error);
     }, [error]);
 
+    useEffect(() => {
+      adjustHeight(); // ✅ 초기 렌더링, 값 변경 시 높이 조절
+    }, [value]);
+
     return (
       <TextareaContainer
         $length={value.length}
@@ -60,7 +74,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         $hierarchy={hierarchy}
       >
         <StyledTextarea
-          ref={ref}
+          ref={(el) => {
+            textareaRef.current = el;
+            if (typeof ref === "function") ref(el);
+          }}
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
@@ -168,6 +185,9 @@ const StyledTextarea = styled.textarea<{
   outline: none;
   color: ${({ theme }) => theme.colors.black};
   resize: vertical;
+  overflow-x: ${({ $isMini }) => ($isMini ? "auto" : "hidden")};
+  overflow-y: ${({ $isMini }) => ($isMini ? "hidden" : "auto")};
+  white-space: ${({ $isMini }) => ($isMini ? "pre" : "pre-wrap")};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.primary_60};
