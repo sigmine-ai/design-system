@@ -178,8 +178,7 @@ const StyledTextarea = styled.textarea<{
   height: ${({ $isMini, $defaultHeight }) =>
     $isMini ? "23px" : $defaultHeight || "87px"};
   min-height: 23px;
-  max-height: ${({ $defaultHeight }) =>
-    $defaultHeight ? $defaultHeight : "300px"};
+  max-height: ${({ $defaultHeight }) => ($defaultHeight ? $defaultHeight : "")};
 
   border: none;
   background: transparent;
