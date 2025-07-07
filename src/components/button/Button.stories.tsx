@@ -46,6 +46,12 @@ export const Default: Story = {
   },
 };
 
+export const Plain: Story = {
+  args: {
+    hierarchy: "plain",
+  },
+};
+
 export const Disabled: Story = {
   args: {
     hierarchy: "disabled",

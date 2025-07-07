@@ -10,6 +10,7 @@ type ButtonHierachy =
   | "disabled"
   | "default"
   | "gray"
+  | "plain"
   | "sigminePrimary"
   | "sigmineSecondary"
   | "sigmineDefault"
@@ -132,6 +133,20 @@ const StyledButton = styled.button<{
             background: ${theme.colors.G_100};
           }
         `;
+      case "plain":
+        return css`
+          background: ${theme.colors.white};
+          color: ${theme.colors.black};
+          border: 1px solid ${theme.colors.G_200};
+          &:hover {
+            background: ${theme.colors.G_100};
+          }
+          &:active {
+            background: ${theme.colors.sigmine_primary_10};
+            box-shadow: inset 0 0 0 1.5px ${theme.colors.sigmine_primary_30};
+            color: ${theme.colors.sigmine_primary};
+          }
+        `;
       case "disabled":
         return css`
           background: ${theme.colors.G_100};
@@ -144,7 +159,7 @@ const StyledButton = styled.button<{
           color: ${theme.colors.white};
 
           &:hover {
-            box-shadow: inset 0 0 0 4px ${theme.colors.primary_30};
+            box-shadow: inset 0 0 0 4px ${theme.colors.sigmine_primary_30};
           }
 
           &:active {
