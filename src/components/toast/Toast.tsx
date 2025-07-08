@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
+import Text from "../text/Text";
+import Icon, { IconNameType } from "../icon/Icon";
 
 interface ToastProps {
-  children: React.ReactNode;
+  text: string;
+  icon?: React.ReactNode;
   duration?: number;
   onClose?: () => void;
 }
 
 const Toast: React.FC<ToastProps> = ({
-  children,
+  text,
+  icon,
   duration = 2000,
   onClose,
 }) => {
@@ -41,12 +45,17 @@ const Toast: React.FC<ToastProps> = ({
           transition={{ duration: 0.5 }}
           style={{
             position: "fixed",
-            top: 40,
+            top: "76px",
             left: "50%",
             zIndex: 9999,
           }}
         >
-          <ToastWrapper>{children}</ToastWrapper>
+          <ToastWrapper>
+            {icon}
+            <Text font="b3_14_reg" color="G_800">
+              {text}
+            </Text>
+          </ToastWrapper>
         </motion.div>
       )}
     </AnimatePresence>,
@@ -57,11 +66,13 @@ const Toast: React.FC<ToastProps> = ({
 export default Toast;
 
 const ToastWrapper = styled.div`
-  background: ${({ theme }) => theme.colors.G_700};
+  background: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
-  padding: 16px 20px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: fit-content;
+  gap: 8px;
+  box-shadow: 0px 2px 42px 0px rgba(32, 34, 50, 0.09);
 `;

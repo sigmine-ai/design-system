@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Toast from "./Toast";
+import Text from "../text/Text";
+import Icon from "../icon/Icon";
 
 const meta: Meta<typeof Toast> = {
   title: "Components/Toast",
@@ -27,9 +29,16 @@ export const Default: Story = {
               onClose={() => {
                 setShow(false);
               }}
-            >
-              기본 토스트 메시지입니다.
-            </Toast>
+              text="토스트 메시지입니다."
+              icon={
+                <Icon
+                  name="SimpleCheck"
+                  size={20}
+                  color="primary"
+                  variant="Linear"
+                />
+              }
+            />
           )}
         </AnimatePresence>
       </>
