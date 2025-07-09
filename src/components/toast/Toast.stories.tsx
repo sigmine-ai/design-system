@@ -31,12 +31,7 @@ export const Default: Story = {
               }}
               text="토스트 메시지입니다."
               icon={
-                <Icon
-                  name="SimpleCheck"
-                  size={20}
-                  color="primary"
-                  variant="Linear"
-                />
+                <Icon name="InfoCircle" size={16} color="red" variant="Bold" />
               }
             />
           )}

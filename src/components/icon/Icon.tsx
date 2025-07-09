@@ -7,9 +7,11 @@ import SimpleCheck from "../../../public/icons/SimpleCheck";
 import SimpleX from "../../../public/icons/SimpleX";
 import SimpleArrowUpRight from "../../../public/icons/SimpleArrowUpRight";
 import HealthCare from "../../../public/icons/HealthCare";
+import Checkbox from "../../../public/icons/Checkbox";
 
 export type IconNameType =
   | keyof typeof Icons
+  | "Checkbox"
   | "SimpleCheck"
   | "SimpleX"
   | "SimpleArrowUpRight"
@@ -39,6 +41,7 @@ const Icon: React.FC<IconProps> = ({
   // 그렇지 않으면 전달받은 React 컴포넌트를 사용합니다.
 
   const customIcons = {
+    Checkbox,
     SimpleCheck,
     SimpleX,
     SimpleArrowUpRight,
