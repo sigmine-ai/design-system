@@ -13,6 +13,7 @@ export interface TextareaProps {
   defaultHeight?: string;
   hierarchy?: "default" | "sigmine";
   error?: boolean;
+  maxHeight?: string;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -27,6 +28,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       defaultHeight,
       error = false,
       hierarchy = "default",
+      maxHeight,
     },
     ref
   ) => {
@@ -55,6 +57,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       if (!isMini && !defaultHeight?.includes("px")) {
         e.target.style.height = "auto";
         e.target.style.height = `${e.target.scrollHeight}px`;
+      }
+
+      if (e.target.setSelectionRange) {
+        const pos = e.target.selectionStart;
+        e.target.setSelectionRange(pos, pos, "none"); // "none" = prevent scroll
       }
     }
 
@@ -88,6 +95,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           $defaultHeight={defaultHeight}
           $error={isError}
           onClick={handleClick}
+          autoFocus={false} // 포커스 시 자동 높이 조절 방지
+          $maxHeight={maxHeight}
         />
         {count && (
           <CountBox $length={value.length}>
@@ -173,12 +182,14 @@ const StyledTextarea = styled.textarea<{
   $isMini: boolean;
   $defaultHeight?: string;
   $error: boolean;
+  $maxHeight?: string;
 }>`
   ${({ theme }) => theme.fonts.b3_14_reg};
   height: ${({ $isMini, $defaultHeight }) =>
     $isMini ? "23px" : $defaultHeight || "87px"};
   min-height: 23px;
-  max-height: ${({ $defaultHeight }) => ($defaultHeight ? $defaultHeight : "")};
+  max-height: ${({ $defaultHeight, $maxHeight }) =>
+    $defaultHeight ? $defaultHeight : $maxHeight ? $maxHeight : ""};
 
   border: none;
   background: transparent;
