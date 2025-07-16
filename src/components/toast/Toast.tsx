@@ -22,7 +22,7 @@ const Toast: React.FC<ToastProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsVisible(false); // 애니메이션 트리거
+      // setIsVisible(false); // 애니메이션 트리거
     }, duration);
 
     return () => clearTimeout(timer);
@@ -52,7 +52,11 @@ const Toast: React.FC<ToastProps> = ({
         >
           <ToastWrapper>
             {icon}
-            <Text font="b3_14_reg" color="G_800">
+            <Text
+              font="b3_14_reg"
+              color="G_800"
+              style={{ whiteSpace: "nowrap" }}
+            >
               {text}
             </Text>
           </ToastWrapper>
