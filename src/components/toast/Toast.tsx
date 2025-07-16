@@ -22,7 +22,7 @@ const Toast: React.FC<ToastProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // setIsVisible(false); // 애니메이션 트리거
+      setIsVisible(false); // 애니메이션 트리거
     }, duration);
 
     return () => clearTimeout(timer);
