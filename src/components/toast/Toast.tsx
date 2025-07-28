@@ -7,6 +7,7 @@ import Icon, { IconNameType } from "../icon/Icon";
 
 interface ToastProps {
   text: string;
+  text2?: string;
   icon?: React.ReactNode;
   duration?: number;
   onClose?: () => void;
@@ -14,6 +15,7 @@ interface ToastProps {
 
 const Toast: React.FC<ToastProps> = ({
   text,
+  text2,
   icon,
   duration = 2000,
   onClose,
@@ -52,13 +54,24 @@ const Toast: React.FC<ToastProps> = ({
         >
           <ToastWrapper>
             {icon}
-            <Text
-              font="b3_14_reg"
-              color="G_800"
-              style={{ whiteSpace: "nowrap" }}
-            >
-              {text}
-            </Text>
+            <TextWrapper>
+              <Text
+                font="b3_14_reg"
+                color="G_800"
+                style={{ whiteSpace: "nowrap" }}
+              >
+                {text}
+              </Text>
+              {text2 && (
+                <Text
+                  font="c1_12_reg"
+                  color="G_400"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  {text2}
+                </Text>
+              )}
+            </TextWrapper>
           </ToastWrapper>
         </motion.div>
       )}
@@ -75,8 +88,13 @@ const ToastWrapper = styled.div`
   padding: 10px 12px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   width: fit-content;
   gap: 8px;
   box-shadow: 0px 2px 42px 0px rgba(32, 34, 50, 0.09);
+`;
+
+const TextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;

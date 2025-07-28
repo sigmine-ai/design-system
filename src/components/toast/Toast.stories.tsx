@@ -29,7 +29,8 @@ export const Default: Story = {
               onClose={() => {
                 setShow(false);
               }}
-              text="해당 기능은 곧 제공될 예정입니다. 조금만 기다려 주세요!"
+              text="해당 기능은 곧 제공될 예정입니다."
+              text2="해당 기능은 곧 제공될 예정입니다. 조금만 기다려 주세요!"
               icon={
                 <Icon name="InfoCircle" size={16} color="red" variant="Bold" />
               }
