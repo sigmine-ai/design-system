@@ -11,6 +11,7 @@ interface ToastProps {
   icon?: React.ReactNode;
   duration?: number;
   onClose?: () => void;
+  isAutoClose?: boolean;
 }
 
 const Toast: React.FC<ToastProps> = ({
@@ -19,11 +20,13 @@ const Toast: React.FC<ToastProps> = ({
   icon,
   duration = 2000,
   onClose,
+  isAutoClose = true,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      if (!isAutoClose) return; // 자동 닫기 설정이 false인 경우 타이머를 실행하지 않음
       setIsVisible(false); // 애니메이션 트리거
     }, duration);
 
