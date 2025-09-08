@@ -8,3 +8,4 @@ export { default as Tooltip } from "./components/tooltip/Tooltip";
 export * from "./styles/theme.type";
 export type { IconNameType } from "./components/icon/Icon";
 export { default as Toast } from "./components/toast/Toast";
+export { default as RangeCalendar } from "./components/calendar/RangeCalendar";
