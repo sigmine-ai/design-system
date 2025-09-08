@@ -19,7 +19,7 @@ export const Basic: Story = {
       dayjs().endOf("day"),
     ]);
     return (
-      <div style={{ maxWidth: 1000 }}>
+      <div style={{ maxWidth: 1000, height: 2000 }}>
         <RangeCalendar defaultValue={range} onChange={(r) => setRange(r)} />
       </div>
     );

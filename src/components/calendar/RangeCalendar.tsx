@@ -196,7 +196,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
   return (
     <Wrapper className={className} style={style}>
       <Panel>
-        <Calendars>
+        <Calendars $showQuickRanges={showQuickRanges}>
           {displayedMonths.map((m, idx) => (
             <Calendar key={idx}>
               <Header>
@@ -363,12 +363,13 @@ const Panel = styled.div`
   justify-content: center;
 `;
 
-const Calendars = styled.div`
+const Calendars = styled.div<{ $showQuickRanges: boolean }>`
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   border-radius: 5px;
-  border: 1px solid ${theme.colors.G_100};
+  border: ${({ $showQuickRanges }) =>
+    $showQuickRanges ? "1px solid " + theme.colors.G_100 : "none"};
   background: ${theme.colors.white};
 `;
 
