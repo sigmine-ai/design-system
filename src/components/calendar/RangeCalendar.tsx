@@ -11,6 +11,7 @@ export type RangeCalendarProps = {
   value?: [Dayjs | null, Dayjs | null];
   defaultValue?: [Dayjs, Dayjs];
   onChange?: (range: [Dayjs, Dayjs]) => void;
+  selectionMode?: "range" | "single"; // 선택 모드
   calendars?: 1 | 2; // 달력 개수
   showQuickRanges?: boolean; // 좌측 퀵 범위 패널 노출 여부
   disableFuture?: boolean; // 미래 날짜 비활성화
@@ -94,6 +95,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
   value,
   defaultValue,
   onChange,
+  selectionMode = "range",
   calendars = 2,
   showQuickRanges = true,
   disableFuture = true,
@@ -137,13 +139,14 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
     calendars === 2 ? [leftMonth, rightMonth] : [leftMonth];
 
   const effectiveRange: [Dayjs | null, Dayjs | null] = useMemo(() => {
+    if (selectionMode === "single") return range;
     if (pendingStart && hoverDate && !range[1]) {
       const start = pendingStart.isBefore(hoverDate) ? pendingStart : hoverDate;
       const end = pendingStart.isBefore(hoverDate) ? hoverDate : pendingStart;
       return [start, end];
     }
     return range;
-  }, [hoverDate, pendingStart, range]);
+  }, [selectionMode, hoverDate, pendingStart, range]);
 
   const isDisabled = (d: Dayjs) => {
     const afterToday = d.startOf("day").isAfter(todayEnd);
@@ -153,6 +156,13 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
 
   const handleSelect = (date: Dayjs) => {
     if (isDisabled(date)) return;
+
+    if (selectionMode === "single") {
+      updateInternal([date, date], true);
+      setPendingStart(null);
+      setHoverDate(null);
+      return;
+    }
 
     // 첫 클릭
     if (!pendingStart) {
@@ -247,6 +257,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
                       $inRange={!!inRange}
                       $isStart={!!isStart}
                       $isEnd={!!isEnd}
+                      $isSingle={selectionMode === "single"}
                       $colors={{
                         primary: appliedPrimary,
                         rangeBg: appliedRangeBg,
@@ -265,7 +276,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
           ))}
         </Calendars>
 
-        {showQuickRanges && (
+        {selectionMode === "range" && showQuickRanges && (
           <SidePanel>
             <QuickList>
               {quickRanges.map((q) => {
@@ -347,7 +358,7 @@ const Panel = styled.div`
   display: flex;
   gap: 12px;
   padding: 8px;
-  background: ${theme.colors.G_50};
+  //   background: ${theme.colors.G_50};
   flex-wrap: wrap;
   justify-content: center;
 `;
@@ -419,9 +430,10 @@ const DayCell = styled.button<{
   $isStart: boolean;
   $isEnd: boolean;
   $colors: { primary?: string; rangeBg?: string; weekend?: string };
+  $isSingle: boolean;
 }>`
   height: 32px;
-  border-radius: ${({ $isStart, $isEnd, $inRange }) =>
+  border-radius: ${({ $isStart, $isEnd, $inRange, $isSingle }) =>
     $isStart
       ? "4px 0px 0px 4px"
       : $isEnd
@@ -455,6 +467,14 @@ const DayCell = styled.button<{
     css`
       background: ${$colors.primary ?? theme.colors.sigmine_primary};
       border-color: ${$colors.primary ?? theme.colors.sigmine_primary};
+    `}
+
+  ${({ $isSingle, $colors, $isStart }) =>
+    $isSingle &&
+    $isStart &&
+    css`
+      border-radius: 4px;
+      background: ${$colors.primary ?? theme.colors.sigmine_primary};
     `}
 `;
 

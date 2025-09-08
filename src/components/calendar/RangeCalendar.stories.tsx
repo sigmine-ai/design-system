@@ -57,6 +57,14 @@ export const WithoutQuickRanges: Story = {
   ),
 };
 
+export const SingleDate: Story = {
+  render: () => (
+    <div style={{ maxWidth: 320 }}>
+      <RangeCalendar calendars={1} selectionMode="single" />
+    </div>
+  ),
+};
+
 export const FutureOnly: Story = {
   render: () => (
     <div style={{ maxWidth: 640 }}>
