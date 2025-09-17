@@ -1,6 +1,6 @@
 {
   "name": "ai-surfers-design-system",
-  "version": "0.1.58",
+  "version": "0.1.59",
   "description": "AI Surfers Design System for PocketPrompt and Sigmine products.",
   "license": "MIT",
   "main": "./dist/index.js",
