@@ -80,3 +80,69 @@ export const PastOnly: Story = {
     </div>
   ),
 };
+
+export const ResponsiveContainer: Story = {
+  render: () => {
+    const [width, setWidth] = React.useState(360);
+    return (
+      <div>
+        <div style={{ marginBottom: 12 }}>
+          <label style={{ marginRight: 8 }}>컨테이너 너비: {width}px</label>
+          <input
+            type="range"
+            min={320}
+            max={1200}
+            value={width}
+            onChange={(e) => setWidth(Number(e.target.value))}
+            style={{ verticalAlign: "middle", width: 300 }}
+          />
+        </div>
+        <div style={{ width, border: "1px dashed #d9d9d9", padding: 8 }}>
+          <RangeCalendar calendars={2} />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const WithApplyButton: Story = {
+  render: () => {
+    const [preview, setPreview] = useState<[Dayjs | null, Dayjs | null]>([
+      null,
+      null,
+    ]);
+    const [confirmed, setConfirmed] = useState<[Dayjs | null, Dayjs | null]>([
+      null,
+      null,
+    ]);
+    return (
+      <div style={{ maxWidth: 1000 }}>
+        <RangeCalendar
+          value={preview}
+          onChange={setPreview}
+          onApply={(r) => setConfirmed(r)}
+          applyLabel="적용하기"
+          calendars={2}
+        />
+        <div style={{ marginTop: 12 }}>
+          <div>
+            미리보기:{" "}
+            {preview[0] && preview[1]
+              ? `${preview[0].format("YYYY-MM-DD")} ~ ${preview[1].format(
+                  "YYYY-MM-DD"
+                )}`
+              : "-"}
+          </div>
+          <div>
+            확정:{" "}
+            {confirmed[0] && confirmed[1]
+              ? `${confirmed[0].format("YYYY-MM-DD")} ~ ${confirmed[1].format(
+                  "YYYY-MM-DD"
+                )}`
+              : "-"}
+          </div>
+        </div>
+      </div>
+    );
+  },
+};

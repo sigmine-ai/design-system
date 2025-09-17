@@ -367,6 +367,8 @@ const Calendars = styled.div<{ $showQuickRanges: boolean }>`
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  flex: 1 1 0;
+  min-width: 260px;
   border-radius: 5px;
   border: ${({ $showQuickRanges }) =>
     $showQuickRanges ? "1px solid " + theme.colors.G_100 : "none"};
@@ -379,6 +381,8 @@ const Calendar = styled.div`
   //   border: 1px solid ${theme.colors.G_100};
   //   background: ${theme.colors.white};
   min-width: 260px;
+  max-width: 100%;
+  flex: 1 1 300px;
 `;
 
 const Header = styled.div`
@@ -403,7 +407,7 @@ const NavButton = styled.button`
 const WeekRow = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: clamp(2px, 0.6vw, 8px);
   margin-bottom: 4px;
 `;
 
@@ -417,11 +421,13 @@ const WeekCell = styled.div`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  //   gap: 2px;
+  width: 100%;
+  gap: clamp(2px, 0.8vw, 10px);
 `;
 
 const EmptyCell = styled.div`
-  height: 32px;
+  aspect-ratio: 1 / 1;
+  min-height: 28px;
 `;
 
 const DayCell = styled.button<{
@@ -433,7 +439,8 @@ const DayCell = styled.button<{
   $colors: { primary?: string; rangeBg?: string; weekend?: string };
   $isSingle: boolean;
 }>`
-  height: 32px;
+  aspect-ratio: 1 / 1;
+  min-height: 28px;
   border-radius: ${({ $isStart, $isEnd, $inRange, $isSingle }) =>
     $isStart
       ? "4px 0px 0px 4px"
