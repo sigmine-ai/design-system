@@ -315,7 +315,7 @@ export const fonts = {
     font-style: normal;
     font-weight: 600;
     line-height: 150%; /* 1.5rem */
-    letters-pacing: -0.02rem;
+    letter-spacing: -0.02rem;
   `,
   b2_16_med: css`
     /* b2_16/med */

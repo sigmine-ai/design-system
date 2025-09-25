@@ -59,7 +59,7 @@ const Icon: React.FC<IconProps> = ({
       color={hexColor}
       size={size}
       onClick={onClick}
-      style={{ pointerEvents: "none" }}
+      style={{ pointerEvents: "none", overflow: "visible" }}
       variant={variant}
       className={className}
     />
