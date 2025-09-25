@@ -58,21 +58,13 @@ const Toast: React.FC<ToastProps> = ({
           <ToastWrapper>
             {icon}
             <TextWrapper>
-              <Text
-                font="b3_14_reg"
-                color="G_800"
-                style={{ whiteSpace: "nowrap" }}
-              >
+              <TitleText font="b3_14_reg" color="G_800">
                 {text}
-              </Text>
+              </TitleText>
               {text2 && (
-                <Text
-                  font="c1_12_reg"
-                  color="G_400"
-                  style={{ whiteSpace: "nowrap" }}
-                >
+                <SubText font="c1_12_reg" color="G_400">
                   {text2}
-                </Text>
+                </SubText>
               )}
             </TextWrapper>
           </ToastWrapper>
@@ -92,7 +84,7 @@ const ToastWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: start;
-  width: fit-content;
+  width: min(92vw, 640px);
   gap: 8px;
   box-shadow: 0px 2px 42px 0px rgba(32, 34, 50, 0.09);
 `;
@@ -100,4 +92,19 @@ const ToastWrapper = styled.div`
 const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 0; /* flex item 내부 줄바꿈을 허용 */
+`;
+
+const TitleText = styled(Text)`
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+`;
+
+const SubText = styled(Text)`
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
 `;
