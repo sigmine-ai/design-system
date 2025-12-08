@@ -8,9 +8,9 @@ const meta: Meta<typeof Icon> = {
   component: Icon,
   tags: ["autodocs"],
   args: {
-    name: "SimpleArrowUpRight", // 예시로 사용되는 아이콘 이름
+    name: "ReplyArrow", // 예시로 사용되는 아이콘 이름
     variant: "Bulk",
-    color: "G_500",
+    color: "primary",
     size: 12,
   },
 };

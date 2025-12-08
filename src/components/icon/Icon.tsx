@@ -8,6 +8,8 @@ import SimpleX from "../../../public/icons/SimpleX";
 import SimpleArrowUpRight from "../../../public/icons/SimpleArrowUpRight";
 import HealthCare from "../../../public/icons/HealthCare";
 import Checkbox from "../../../public/icons/Checkbox";
+import AIGenerate from "../../../public/icons/AIGenerate";
+import ReplyArrow from "../../../public/icons/ReplyArrow";
 
 export type IconNameType =
   | keyof typeof Icons
@@ -16,6 +18,8 @@ export type IconNameType =
   | "SimpleX"
   | "SimpleArrowUpRight"
   | "HealthCare"
+  | "AIGenerate"
+  | "ReplyArrow"
   | React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 interface IconProps {
@@ -46,6 +50,8 @@ const Icon: React.FC<IconProps> = ({
     SimpleX,
     SimpleArrowUpRight,
     HealthCare,
+    AIGenerate,
+    ReplyArrow,
   };
 
   const IconComponent =
