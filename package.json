@@ -1,6 +1,6 @@
 {
   "name": "ai-surfers-design-system",
-  "version": "0.1.62",
+  "version": "0.1.63",
   "description": "AI Surfers Design System for PocketPrompt and Sigmine products.",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -53,6 +53,8 @@
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-plugin-storybook": "^0.12.0",
+    "react": "^19",
+    "react-dom": "^19",
     "storybook": "^8.6.12",
     "styled-components": "^6.1.17",
     "tsup": "^8.4.0",
