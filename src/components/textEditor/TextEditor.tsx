@@ -10,6 +10,8 @@ import React, {
 import styled, { css } from "styled-components";
 import Icon from "@/components/icon/Icon";
 
+type AttachmentUrlItem = string | { url: string; name?: string; id?: string };
+
 export interface TextEditorProps {
   placeholder?: string;
   value: string;
@@ -24,8 +26,13 @@ export interface TextEditorProps {
   attachmentAccept?: string;
   onAttachmentChange?: (files: FileList | null) => void;
   attachments?: File[];
+  attachmentUrls?: AttachmentUrlItem[];
   attachmentPreviewSize?: number;
-  onAttachmentRemove?: (file: File, index: number) => void;
+  onAttachmentRemove?: (
+    attachment: File | AttachmentUrlItem,
+    index: number,
+    source: "file" | "url"
+  ) => void;
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
@@ -44,6 +51,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       attachmentAccept = "image/*",
       onAttachmentChange,
       attachments,
+      attachmentUrls,
       attachmentPreviewSize = 64,
       onAttachmentRemove,
     },
@@ -54,7 +62,15 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
     const attachmentInputRef = useRef<HTMLInputElement | null>(null);
     const attachmentInputId = useId();
     const [attachmentPreviews, setAttachmentPreviews] = useState<
-      Array<{ key: string; url: string; name: string; index: number; file: File }>
+      Array<{
+        key: string;
+        url: string;
+        name: string;
+        source: "file" | "url";
+        sourceIndex: number;
+        file?: File;
+        urlItem?: AttachmentUrlItem;
+      }>
     >([]);
 
     const handleClick = () => {
@@ -108,28 +124,60 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
     }, [value]);
 
     useEffect(() => {
-      if (!attachments || attachments.length === 0) {
-        setAttachmentPreviews([]);
-        return;
+      const nextPreviews: Array<{
+        key: string;
+        url: string;
+        name: string;
+        source: "file" | "url";
+        sourceIndex: number;
+        file?: File;
+        urlItem?: AttachmentUrlItem;
+      }> = [];
+      const cleanupUrls: string[] = [];
+
+      if (attachments && attachments.length > 0) {
+        attachments.forEach((file, index) => {
+          const objectUrl = URL.createObjectURL(file);
+          cleanupUrls.push(objectUrl);
+          const key = `file-${file.name}-${file.size}-${file.lastModified}-${index}`;
+          nextPreviews.push({
+            key,
+            url: objectUrl,
+            name: file.name,
+            source: "file",
+            sourceIndex: index,
+            file,
+          });
+        });
       }
 
-      const nextPreviews = attachments.map((file, index) => {
-        const key = `${file.name}-${file.size}-${file.lastModified}`;
-        return {
-          key,
-          url: URL.createObjectURL(file),
-          name: file.name,
-          file,
-          index,
-        };
-      });
+      if (attachmentUrls && attachmentUrls.length > 0) {
+        attachmentUrls.forEach((item, index) => {
+          const normalized: { url: string; name?: string; id?: string } =
+            typeof item === "string"
+              ? { url: item }
+              : { url: item.url, name: item.name, id: item.id };
+
+          if (!normalized.url) return;
+
+          const key = `url-${normalized.id ?? normalized.url}-${index}`;
+          nextPreviews.push({
+            key,
+            url: normalized.url,
+            name: normalized.name ?? normalized.url,
+            source: "url",
+            sourceIndex: index,
+            urlItem: item,
+          });
+        });
+      }
 
       setAttachmentPreviews(nextPreviews);
 
       return () => {
-        nextPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+        cleanupUrls.forEach((objectUrl) => URL.revokeObjectURL(objectUrl));
       };
-    }, [attachments]);
+    }, [attachments, attachmentUrls]);
 
     return (
       <TextareaContainer
@@ -173,7 +221,13 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
                     type="button"
                     aria-label="첨부 삭제"
                     onClick={() =>
-                      onAttachmentRemove(preview.file, preview.index)
+                      onAttachmentRemove(
+                        preview.source === "file"
+                          ? preview.file!
+                          : preview.urlItem ?? preview.url,
+                        preview.sourceIndex,
+                        preview.source
+                      )
                     }
                   >
                     <Icon name="CloseCircle" variant="Bold" size={14} />
@@ -200,12 +254,11 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
             <Icon name="Gallery" variant="Bold" size={18} />
           </AttachmentButton>
           {count && (
-          <CountBox $length={value.length}>
-            <b>{value.length}</b>/{count}
-          </CountBox>
-        )}
+            <CountBox $length={value.length}>
+              <b>{value.length}</b>/{count}
+            </CountBox>
+          )}
         </AttachmentContainer>
-        
       </TextareaContainer>
     );
   }
