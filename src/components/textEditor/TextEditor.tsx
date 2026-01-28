@@ -10,7 +10,15 @@ import React, {
 import styled, { css } from "styled-components";
 import Icon from "@/components/icon/Icon";
 
-type AttachmentUrlItem = string | { url: string; name?: string; id?: string };
+type AttachmentUrlItem =
+  | string
+  | {
+      url: string;
+      name?: string;
+      id?: string;
+      type?: "image" | "video";
+      mimeType?: string;
+    };
 
 export interface TextEditorProps {
   placeholder?: string;
@@ -68,6 +76,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
         name: string;
         source: "file" | "url";
         sourceIndex: number;
+        kind: "image" | "video";
         file?: File;
         urlItem?: AttachmentUrlItem;
       }>
@@ -130,10 +139,31 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
         name: string;
         source: "file" | "url";
         sourceIndex: number;
+        kind: "image" | "video";
         file?: File;
         urlItem?: AttachmentUrlItem;
       }> = [];
       const cleanupUrls: string[] = [];
+
+      const detectKindFromFile = (file: File): "image" | "video" => {
+        if (file.type.startsWith("video/")) return "video";
+        return "image";
+      };
+
+      const detectKindFromUrl = (item: {
+        url: string;
+        type?: "image" | "video";
+        mimeType?: string;
+      }): "image" | "video" => {
+        if (item.type) return item.type;
+        if (item.mimeType?.startsWith("video/")) return "video";
+
+        const videoExtensions = [".mp4", ".webm", ".mov", ".m4v", ".avi"];
+        const lowerUrl = item.url.toLowerCase();
+        if (videoExtensions.some((ext) => lowerUrl.endsWith(ext))) return "video";
+
+        return "image";
+      };
 
       if (attachments && attachments.length > 0) {
         attachments.forEach((file, index) => {
@@ -146,6 +176,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
             name: file.name,
             source: "file",
             sourceIndex: index,
+            kind: detectKindFromFile(file),
             file,
           });
         });
@@ -153,10 +184,22 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
 
       if (attachmentUrls && attachmentUrls.length > 0) {
         attachmentUrls.forEach((item, index) => {
-          const normalized: { url: string; name?: string; id?: string } =
+          const normalized: {
+            url: string;
+            name?: string;
+            id?: string;
+            type?: "image" | "video";
+            mimeType?: string;
+          } =
             typeof item === "string"
               ? { url: item }
-              : { url: item.url, name: item.name, id: item.id };
+              : {
+                  url: item.url,
+                  name: item.name,
+                  id: item.id,
+                  type: item.type,
+                  mimeType: item.mimeType,
+                };
 
           if (!normalized.url) return;
 
@@ -167,6 +210,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
             name: normalized.name ?? normalized.url,
             source: "url",
             sourceIndex: index,
+            kind: detectKindFromUrl(normalized),
             urlItem: item,
           });
         });
@@ -215,7 +259,16 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
                 key={preview.key}
                 $size={attachmentPreviewSize}
               >
-                <img src={preview.url} alt={preview.name} />
+                {preview.kind === "video" ? (
+                  <VideoPreview
+                    src={preview.url}
+                    muted
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : (
+                  <img src={preview.url} alt={preview.name} />
+                )}
                 {onAttachmentRemove && !disabled && (
                   <AttachmentRemoveButton
                     type="button"
@@ -412,6 +465,14 @@ const AttachmentPreviewItem = styled.div<{ $size: number }>`
     object-fit: cover;
     display: block;
   }
+`;
+
+const VideoPreview = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: ${({ theme }) => theme.colors.black};
 `;
 
 const AttachmentRemoveButton = styled.button`

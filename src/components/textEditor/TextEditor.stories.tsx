@@ -113,6 +113,11 @@ export const WithRemoteAttachments: Story = {
         url: "https://picsum.photos/seed/design-system-2/160/160",
         name: "기존 이미지 2",
       },
+      {
+        url: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        name: "샘플 비디오",
+        type: "video",
+      },
     ],
   },
 };
