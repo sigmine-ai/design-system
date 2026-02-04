@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import styled, { css } from "styled-components";
 import Icon from "@/components/icon/Icon";
+import Tooltip from "@/components/tooltip/Tooltip";
 
 type AttachmentUrlItem =
   | string
@@ -41,6 +42,7 @@ export interface TextEditorProps {
     index: number,
     source: "file" | "url"
   ) => void;
+  attachmentLimit?: number;
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
@@ -62,6 +64,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       attachmentUrls,
       attachmentPreviewSize = 64,
       onAttachmentRemove,
+      attachmentLimit,
     },
     ref
   ) => {
@@ -85,6 +88,11 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
     const handleClick = () => {
       setIsError(false);
     };
+
+    const currentAttachmentCount =
+      (attachments?.length ?? 0) + (attachmentUrls?.length ?? 0);
+    const isLimitReached =
+      typeof attachmentLimit === "number" && currentAttachmentCount >= attachmentLimit;
 
     function adjustHeight() {
       if (textareaRef.current && !isMini) {
@@ -117,7 +125,44 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       event: React.ChangeEvent<HTMLInputElement>
     ) {
       const files = event.target.files;
-      onAttachmentChange?.(files ?? null);
+      if (!files) {
+        onAttachmentChange?.(null);
+        if (attachmentInputRef.current) {
+          attachmentInputRef.current.value = "";
+        }
+        return;
+      }
+
+      let nextFiles = Array.from(files);
+
+      if (typeof attachmentLimit === "number") {
+        const remainingSlots = Math.max(attachmentLimit - currentAttachmentCount, 0);
+
+        if (remainingSlots <= 0) {
+          if (attachmentInputRef.current) {
+            attachmentInputRef.current.value = "";
+          }
+          return;
+        }
+
+        nextFiles = nextFiles.slice(0, remainingSlots);
+      }
+
+      if (nextFiles.length === 0) {
+        if (attachmentInputRef.current) {
+          attachmentInputRef.current.value = "";
+        }
+        return;
+      }
+
+      if (typeof window !== "undefined" && typeof DataTransfer !== "undefined") {
+        const dataTransfer = new DataTransfer();
+        nextFiles.forEach((file) => dataTransfer.items.add(file));
+        onAttachmentChange?.(dataTransfer.files);
+      } else {
+        onAttachmentChange?.(files);
+      }
+
       if (attachmentInputRef.current) {
         attachmentInputRef.current.value = "";
       }
@@ -298,14 +343,30 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
             accept={attachmentAccept}
             onChange={handleAttachmentChange}
           />
-          <AttachmentButton
-            type="button"
-            aria-label="이미지 첨부"
-            disabled={disabled}
-            onClick={handleAttachmentButtonClick}
-          >
-            <Icon name="Gallery" variant="Bold" size={18} />
-          </AttachmentButton>
+          {attachmentLimit === 0 ? (
+            <Tooltip content="추후 추가될 예정이에요" position="right">
+              <span>
+                <AttachmentButton
+                  type="button"
+                  aria-label="이미지 첨부"
+                  disabled
+                  tabIndex={-1}
+                  style={{ pointerEvents: "auto" }}
+                >
+                  <Icon name="Gallery" variant="Bold" size={18} />
+                </AttachmentButton>
+              </span>
+            </Tooltip>
+          ) : (
+            <AttachmentButton
+              type="button"
+              aria-label="이미지 첨부"
+              disabled={disabled || isLimitReached}
+              onClick={handleAttachmentButtonClick}
+            >
+              <Icon name="Gallery" variant="Bold" size={18} />
+            </AttachmentButton>
+          )}
           {count && (
             <CountBox $length={value.length}>
               <b>{value.length}</b>/{count}

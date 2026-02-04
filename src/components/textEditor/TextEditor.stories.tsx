@@ -16,6 +16,7 @@ const meta: Meta<typeof TextEditor> = {
     attachments: { control: false },
     attachmentUrls: { control: false },
     onAttachmentRemove: { control: false },
+    attachmentLimit: { control: { type: "number", min: 0 } },
     hierarchy: {
       options: ["default", "sigmine"],
       control: { type: "radio" },
@@ -119,5 +120,13 @@ export const WithRemoteAttachments: Story = {
         type: "video",
       },
     ],
+  },
+};
+
+export const WithAttachmentLimit: Story = {
+  render: (args) => <Template {...args} />,
+  args: {
+    hierarchy: "default",
+    attachmentLimit: 3,
   },
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ReactNode, useState } from "react";
+import Text from "../text/Text";
 import styled from "styled-components";
 
 type TooltipPosition = "top" | "bottom" | "left" | "right";
@@ -26,7 +27,9 @@ const Tooltip: React.FC<TooltipProps> = ({
       {children}
       {visible && (
         <TooltipBox $position={position}>
+          <Text font="b3_14_med" color="white" style={{whiteSpace: 'nowrap'}}>
           {content}
+          </Text>
           <Arrow $position={position} />
         </TooltipBox>
       )}
