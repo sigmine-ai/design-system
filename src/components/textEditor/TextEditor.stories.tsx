@@ -139,3 +139,12 @@ export const DraggingHighlight: Story = {
     placeholder: "드래그 상태 강조 예시",
   },
 };
+
+export const Focused: Story = {
+  render: (args) => <Template {...args} />,
+  args: {
+    hierarchy: "default",
+    isFocused: true,
+    placeholder: "자동 포커스 예시",
+  },
+};

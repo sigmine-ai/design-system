@@ -44,6 +44,7 @@ export interface TextEditorProps {
   ) => void;
   attachmentLimit?: number;
   isDragging?: boolean;
+  isFocused?: boolean;
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
@@ -66,7 +67,8 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       attachmentPreviewSize = 64,
       onAttachmentRemove,
       attachmentLimit,
-      isDragging
+      isDragging,
+      isFocused = false,
     },
     ref
   ) => {
@@ -178,6 +180,12 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       if (defaultHeight?.includes("px")) return;
       adjustHeight();
     }, [value]);
+
+    useEffect(() => {
+      if (isFocused && textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, [isFocused]);
 
     useEffect(() => {
       const nextPreviews: Array<{
