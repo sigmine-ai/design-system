@@ -2,6 +2,7 @@
 
 import React, {
   forwardRef,
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -47,6 +48,76 @@ export interface TextEditorProps {
   isFocused?: boolean;
 }
 
+/**
+ * Parses the accept attribute string and returns arrays of extension patterns and MIME patterns.
+ * Supports both extension-based (.png, .jpg) and MIME-based (image/*, video/mp4) patterns.
+ */
+function parseAcceptPatterns(accept: string): {
+  extensions: string[];
+  mimePatterns: string[];
+} {
+  const extensions: string[] = [];
+  const mimePatterns: string[] = [];
+
+  const patterns = accept.split(",").map((p) => p.trim().toLowerCase());
+
+  for (const pattern of patterns) {
+    if (!pattern) continue;
+    if (pattern.startsWith(".")) {
+      extensions.push(pattern);
+    } else {
+      mimePatterns.push(pattern);
+    }
+  }
+
+  return { extensions, mimePatterns };
+}
+
+/**
+ * Checks if a file matches the accept patterns.
+ * Supports both extension-based patterns (.png) and MIME patterns (image/*).
+ */
+function isFileAccepted(file: File, accept: string): boolean {
+  if (!accept || accept === "*" || accept === "*/*") return true;
+
+  const { extensions, mimePatterns } = parseAcceptPatterns(accept);
+  const fileName = file.name.toLowerCase();
+  const fileType = file.type.toLowerCase();
+
+  // Check extension patterns
+  for (const ext of extensions) {
+    if (fileName.endsWith(ext)) {
+      return true;
+    }
+  }
+
+  // Check MIME patterns
+  for (const pattern of mimePatterns) {
+    if (pattern.endsWith("/*")) {
+      // Wildcard MIME type (e.g., image/*)
+      const prefix = pattern.slice(0, -1); // "image/"
+      if (fileType.startsWith(prefix)) {
+        return true;
+      }
+    } else {
+      // Exact MIME type (e.g., image/png)
+      if (fileType === pattern) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * accept 속성에 맞는 파일만 필터링
+ * Supports both extension-based patterns (.png, .jpg) and MIME patterns (image/*).
+ */
+function filterFilesByAccept(files: File[], accept: string): File[] {
+  return files.filter(file => isFileAccepted(file, accept));
+}
+
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
   (
     {
@@ -73,6 +144,8 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
     ref
   ) => {
     const [isError, setIsError] = useState(error);
+    const [isDraggingInternal, setIsDraggingInternal] = useState(false);
+    const dragCounterRef = useRef(0);
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const attachmentInputRef = useRef<HTMLInputElement | null>(null);
     const attachmentInputId = useId();
@@ -97,6 +170,119 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       (attachments?.length ?? 0) + (attachmentUrls?.length ?? 0);
     const isLimitReached =
       typeof attachmentLimit === "number" && currentAttachmentCount >= attachmentLimit;
+
+    /**
+     * 파일 목록을 처리하여 onAttachmentChange 호출
+     */
+    const processFiles = useCallback(
+      (files: File[]) => {
+        if (disabled || !onAttachmentChange) return;
+
+        // accept 속성에 맞는 파일만 필터링
+        let filteredFiles = filterFilesByAccept(files, attachmentAccept);
+
+        // attachmentLimit 적용
+        if (typeof attachmentLimit === "number") {
+          const remainingSlots = Math.max(attachmentLimit - currentAttachmentCount, 0);
+          if (remainingSlots <= 0) return;
+          filteredFiles = filteredFiles.slice(0, remainingSlots);
+        }
+
+        if (filteredFiles.length === 0) return;
+
+        // FileList 생성 및 콜백 호출
+        if (typeof window !== "undefined" && typeof DataTransfer !== "undefined") {
+          const dataTransfer = new DataTransfer();
+          filteredFiles.forEach((file) => dataTransfer.items.add(file));
+          onAttachmentChange(dataTransfer.files);
+        }
+      },
+      [disabled, onAttachmentChange, attachmentAccept, attachmentLimit, currentAttachmentCount]
+    );
+
+    /**
+     * 드래그 진입 핸들러
+     */
+    const handleDragEnter = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (disabled) return;
+        if (!e.dataTransfer.types.includes('Files')) return;
+
+        dragCounterRef.current++;
+        if (dragCounterRef.current === 1) {
+          setIsDraggingInternal(true);
+        }
+      },
+      [disabled]
+    );
+
+    /**
+     * 드래그 오버 핸들러 (드롭 허용)
+     */
+    const handleDragOver = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      []
+    );
+
+    /**
+     * 드래그 이탈 핸들러
+     */
+    const handleDragLeave = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        dragCounterRef.current--;
+        if (dragCounterRef.current === 0) {
+          setIsDraggingInternal(false);
+        }
+      },
+      []
+    );
+
+    /**
+     * 드롭 핸들러
+     */
+    const handleDrop = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        dragCounterRef.current = 0;
+        setIsDraggingInternal(false);
+
+        if (disabled) return;
+
+        const files = e.dataTransfer.files;
+        if (!files || files.length === 0) return;
+
+        processFiles(Array.from(files));
+      },
+      [disabled, processFiles]
+    );
+
+    /**
+     * 붙여넣기 핸들러
+     */
+    const handlePaste = useCallback(
+      (e: React.ClipboardEvent) => {
+        if (disabled) return;
+
+        const files = e.clipboardData?.files;
+        if (!files || files.length === 0) return;
+
+        // 파일이 있으면 기본 동작 방지하고 파일 처리
+        e.preventDefault();
+        processFiles(Array.from(files));
+      },
+      [disabled, processFiles]
+    );
 
     function adjustHeight() {
       if (textareaRef.current && !isMini) {
@@ -170,6 +356,69 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       if (attachmentInputRef.current) {
         attachmentInputRef.current.value = "";
       }
+    }
+
+    function processDroppedOrPastedFiles(files: File[]) {
+      if (!onAttachmentChange || files.length === 0) return;
+
+      // Filter files by accept pattern
+      let acceptedFiles = files.filter((file) =>
+        isFileAccepted(file, attachmentAccept)
+      );
+
+      if (acceptedFiles.length === 0) return;
+
+      // Apply attachment limit
+      if (typeof attachmentLimit === "number") {
+        const remainingSlots = Math.max(attachmentLimit - currentAttachmentCount, 0);
+        if (remainingSlots <= 0) return;
+        acceptedFiles = acceptedFiles.slice(0, remainingSlots);
+      }
+
+      if (acceptedFiles.length === 0) return;
+
+      if (typeof window !== "undefined" && typeof DataTransfer !== "undefined") {
+        const dataTransfer = new DataTransfer();
+        acceptedFiles.forEach((file) => dataTransfer.items.add(file));
+        onAttachmentChange(dataTransfer.files);
+      }
+    }
+
+    function handleDrop(event: React.DragEvent<HTMLTextAreaElement>) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (disabled || isLimitReached) return;
+
+      const files = Array.from(event.dataTransfer.files);
+      processDroppedOrPastedFiles(files);
+    }
+
+    function handlePaste(event: React.ClipboardEvent<HTMLTextAreaElement>) {
+      if (disabled || isLimitReached) return;
+
+      const items = event.clipboardData?.items;
+      if (!items) return;
+
+      const files: File[] = [];
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.kind === "file") {
+          const file = item.getAsFile();
+          if (file) {
+            files.push(file);
+          }
+        }
+      }
+
+      if (files.length > 0) {
+        processDroppedOrPastedFiles(files);
+      }
+    }
+
+    function handleDragOver(event: React.DragEvent<HTMLTextAreaElement>) {
+      event.preventDefault();
+      event.stopPropagation();
     }
 
     useEffect(() => {
@@ -284,7 +533,11 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
         $disabled={disabled}
         $error={isError}
         $hierarchy={hierarchy}
-        $isDragging={!!isDragging}
+        $isDragging={!!isDragging || isDraggingInternal}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
       >
         <StyledTextarea
           ref={(el) => {
@@ -305,8 +558,12 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
           $defaultHeight={defaultHeight}
           $error={isError}
           onClick={handleClick}
+          onDrop={handleDrop}
+          onPaste={handlePaste}
+          onDragOver={handleDragOver}
           autoFocus={false}
           $maxHeight={maxHeight}
+          onPaste={handlePaste}
         />
         {attachmentPreviews.length > 0 && (
           <AttachmentPreviewBar>
