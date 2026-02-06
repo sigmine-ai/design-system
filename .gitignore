@@ -1,6 +1,11 @@
 # Node modules
 /node_modules
 
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+install-state.gz
+
 # Build output
 /dist
 
@@ -31,3 +36,5 @@ yarn-error.log*
 
 # VSCode settings
 .vscode/
+
+TODO.md
