@@ -12,28 +12,6 @@ import styled, { css } from "styled-components";
 import Icon from "@/components/icon/Icon";
 import Tooltip from "@/components/tooltip/Tooltip";
 
-/**
- * MIME 타입이 accept 패턴과 매칭되는지 확인
- */
-function matchesMimeType(fileType: string, acceptPattern: string): boolean {
-  if (acceptPattern === '*/*') return true;
-  if (acceptPattern.endsWith('/*')) {
-    const category = acceptPattern.slice(0, -2);
-    return fileType.startsWith(category + '/');
-  }
-  return fileType === acceptPattern;
-}
-
-/**
- * accept 속성에 맞는 파일만 필터링
- */
-function filterFilesByAccept(files: File[], accept: string): File[] {
-  const patterns = accept.split(',').map(p => p.trim());
-  return files.filter(file =>
-    patterns.some(pattern => matchesMimeType(file.type, pattern))
-  );
-}
-
 type AttachmentUrlItem =
   | string
   | {
@@ -130,6 +108,14 @@ function isFileAccepted(file: File, accept: string): boolean {
   }
 
   return false;
+}
+
+/**
+ * accept 속성에 맞는 파일만 필터링
+ * Supports both extension-based patterns (.png, .jpg) and MIME patterns (image/*).
+ */
+function filterFilesByAccept(files: File[], accept: string): File[] {
+  return files.filter(file => isFileAccepted(file, accept));
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
