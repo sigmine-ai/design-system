@@ -2,6 +2,7 @@
 
 import React, {
   forwardRef,
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -10,6 +11,28 @@ import React, {
 import styled, { css } from "styled-components";
 import Icon from "@/components/icon/Icon";
 import Tooltip from "@/components/tooltip/Tooltip";
+
+/**
+ * MIME 타입이 accept 패턴과 매칭되는지 확인
+ */
+function matchesMimeType(fileType: string, acceptPattern: string): boolean {
+  if (acceptPattern === '*/*') return true;
+  if (acceptPattern.endsWith('/*')) {
+    const category = acceptPattern.slice(0, -2);
+    return fileType.startsWith(category + '/');
+  }
+  return fileType === acceptPattern;
+}
+
+/**
+ * accept 속성에 맞는 파일만 필터링
+ */
+function filterFilesByAccept(files: File[], accept: string): File[] {
+  const patterns = accept.split(',').map(p => p.trim());
+  return files.filter(file =>
+    patterns.some(pattern => matchesMimeType(file.type, pattern))
+  );
+}
 
 type AttachmentUrlItem =
   | string
@@ -73,6 +96,8 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
     ref
   ) => {
     const [isError, setIsError] = useState(error);
+    const [isDraggingInternal, setIsDraggingInternal] = useState(false);
+    const dragCounterRef = useRef(0);
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const attachmentInputRef = useRef<HTMLInputElement | null>(null);
     const attachmentInputId = useId();
@@ -97,6 +122,119 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       (attachments?.length ?? 0) + (attachmentUrls?.length ?? 0);
     const isLimitReached =
       typeof attachmentLimit === "number" && currentAttachmentCount >= attachmentLimit;
+
+    /**
+     * 파일 목록을 처리하여 onAttachmentChange 호출
+     */
+    const processFiles = useCallback(
+      (files: File[]) => {
+        if (disabled || !onAttachmentChange) return;
+
+        // accept 속성에 맞는 파일만 필터링
+        let filteredFiles = filterFilesByAccept(files, attachmentAccept);
+
+        // attachmentLimit 적용
+        if (typeof attachmentLimit === "number") {
+          const remainingSlots = Math.max(attachmentLimit - currentAttachmentCount, 0);
+          if (remainingSlots <= 0) return;
+          filteredFiles = filteredFiles.slice(0, remainingSlots);
+        }
+
+        if (filteredFiles.length === 0) return;
+
+        // FileList 생성 및 콜백 호출
+        if (typeof window !== "undefined" && typeof DataTransfer !== "undefined") {
+          const dataTransfer = new DataTransfer();
+          filteredFiles.forEach((file) => dataTransfer.items.add(file));
+          onAttachmentChange(dataTransfer.files);
+        }
+      },
+      [disabled, onAttachmentChange, attachmentAccept, attachmentLimit, currentAttachmentCount]
+    );
+
+    /**
+     * 드래그 진입 핸들러
+     */
+    const handleDragEnter = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (disabled) return;
+        if (!e.dataTransfer.types.includes('Files')) return;
+
+        dragCounterRef.current++;
+        if (dragCounterRef.current === 1) {
+          setIsDraggingInternal(true);
+        }
+      },
+      [disabled]
+    );
+
+    /**
+     * 드래그 오버 핸들러 (드롭 허용)
+     */
+    const handleDragOver = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      []
+    );
+
+    /**
+     * 드래그 이탈 핸들러
+     */
+    const handleDragLeave = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        dragCounterRef.current--;
+        if (dragCounterRef.current === 0) {
+          setIsDraggingInternal(false);
+        }
+      },
+      []
+    );
+
+    /**
+     * 드롭 핸들러
+     */
+    const handleDrop = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        dragCounterRef.current = 0;
+        setIsDraggingInternal(false);
+
+        if (disabled) return;
+
+        const files = e.dataTransfer.files;
+        if (!files || files.length === 0) return;
+
+        processFiles(Array.from(files));
+      },
+      [disabled, processFiles]
+    );
+
+    /**
+     * 붙여넣기 핸들러
+     */
+    const handlePaste = useCallback(
+      (e: React.ClipboardEvent) => {
+        if (disabled) return;
+
+        const files = e.clipboardData?.files;
+        if (!files || files.length === 0) return;
+
+        // 파일이 있으면 기본 동작 방지하고 파일 처리
+        e.preventDefault();
+        processFiles(Array.from(files));
+      },
+      [disabled, processFiles]
+    );
 
     function adjustHeight() {
       if (textareaRef.current && !isMini) {
@@ -284,7 +422,11 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
         $disabled={disabled}
         $error={isError}
         $hierarchy={hierarchy}
-        $isDragging={!!isDragging}
+        $isDragging={!!isDragging || isDraggingInternal}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
       >
         <StyledTextarea
           ref={(el) => {
@@ -307,6 +449,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
           onClick={handleClick}
           autoFocus={false}
           $maxHeight={maxHeight}
+          onPaste={handlePaste}
         />
         {attachmentPreviews.length > 0 && (
           <AttachmentPreviewBar>

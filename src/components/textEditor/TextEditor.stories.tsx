@@ -148,3 +148,45 @@ export const Focused: Story = {
     placeholder: "자동 포커스 예시",
   },
 };
+
+export const DragAndDrop: Story = {
+  render: (args) => (
+    <div>
+      <div style={{ marginBottom: 16, padding: 12, background: "#f0f4ff", borderRadius: 8 }}>
+        <strong>🖱️ 드래그 앤 드롭 테스트</strong>
+        <p style={{ margin: "8px 0 0", fontSize: 14, color: "#666" }}>
+          이미지나 영상 파일을 아래 에디터 영역에 드래그해서 놓아보세요.<br />
+          드래그 중 점선 테두리가 표시되고, 드롭 시 미리보기가 나타납니다.
+        </p>
+      </div>
+      <Template {...args} />
+    </div>
+  ),
+  args: {
+    hierarchy: "default",
+    attachmentAccept: "image/*,video/*",
+    attachmentLimit: 5,
+    placeholder: "이미지/영상을 드래그 앤 드롭하세요",
+  },
+};
+
+export const PasteMedia: Story = {
+  render: (args) => (
+    <div>
+      <div style={{ marginBottom: 16, padding: 12, background: "#f0fff4", borderRadius: 8 }}>
+        <strong>📋 붙여넣기 테스트</strong>
+        <p style={{ margin: "8px 0 0", fontSize: 14, color: "#666" }}>
+          클립보드에 이미지를 복사한 후 (스크린샷, 이미지 우클릭 복사 등)<br />
+          에디터에 포커스한 상태에서 Ctrl+V (Mac: Cmd+V)로 붙여넣기하세요.
+        </p>
+      </div>
+      <Template {...args} />
+    </div>
+  ),
+  args: {
+    hierarchy: "default",
+    attachmentAccept: "image/*",
+    attachmentLimit: 3,
+    placeholder: "Ctrl+V로 이미지를 붙여넣으세요",
+  },
+};
