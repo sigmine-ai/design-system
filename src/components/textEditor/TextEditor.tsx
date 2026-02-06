@@ -43,6 +43,7 @@ export interface TextEditorProps {
     source: "file" | "url"
   ) => void;
   attachmentLimit?: number;
+  isDragging?: boolean;
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
@@ -65,6 +66,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       attachmentPreviewSize = 64,
       onAttachmentRemove,
       attachmentLimit,
+      isDragging
     },
     ref
   ) => {
@@ -274,6 +276,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
         $disabled={disabled}
         $error={isError}
         $hierarchy={hierarchy}
+        $isDragging={!!isDragging}
       >
         <StyledTextarea
           ref={(el) => {
@@ -385,6 +388,7 @@ const TextareaContainer = styled.div<{
   $disabled?: boolean;
   $error: boolean;
   $hierarchy: "default" | "sigmine";
+  $isDragging?: boolean;
 }>`
   position: relative;
   display: flex;
@@ -438,6 +442,14 @@ const TextareaContainer = styled.div<{
     `
       border: 1px solid rgba(246, 78, 57, 0.30);
       background: rgba(246, 78, 57, 0.05);
+    `}
+
+  ${({ $isDragging, theme }) =>
+    $isDragging &&
+    css`
+      border: 2px dashed ${theme.colors.primary};
+      background: ${theme.colors.primary_10};
+      box-shadow: 0 0 0 2px ${theme.colors.primary_20};
     `}
 `;
 

@@ -130,3 +130,12 @@ export const WithAttachmentLimit: Story = {
     attachmentLimit: 3,
   },
 };
+
+export const DraggingHighlight: Story = {
+  render: (args) => <Template {...args} />,
+  args: {
+    hierarchy: "default",
+    isDragging: true,
+    placeholder: "드래그 상태 강조 예시",
+  },
+};
