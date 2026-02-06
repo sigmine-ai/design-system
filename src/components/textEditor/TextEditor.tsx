@@ -358,69 +358,6 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       }
     }
 
-    function processDroppedOrPastedFiles(files: File[]) {
-      if (!onAttachmentChange || files.length === 0) return;
-
-      // Filter files by accept pattern
-      let acceptedFiles = files.filter((file) =>
-        isFileAccepted(file, attachmentAccept)
-      );
-
-      if (acceptedFiles.length === 0) return;
-
-      // Apply attachment limit
-      if (typeof attachmentLimit === "number") {
-        const remainingSlots = Math.max(attachmentLimit - currentAttachmentCount, 0);
-        if (remainingSlots <= 0) return;
-        acceptedFiles = acceptedFiles.slice(0, remainingSlots);
-      }
-
-      if (acceptedFiles.length === 0) return;
-
-      if (typeof window !== "undefined" && typeof DataTransfer !== "undefined") {
-        const dataTransfer = new DataTransfer();
-        acceptedFiles.forEach((file) => dataTransfer.items.add(file));
-        onAttachmentChange(dataTransfer.files);
-      }
-    }
-
-    function handleDrop(event: React.DragEvent<HTMLTextAreaElement>) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      if (disabled || isLimitReached) return;
-
-      const files = Array.from(event.dataTransfer.files);
-      processDroppedOrPastedFiles(files);
-    }
-
-    function handlePaste(event: React.ClipboardEvent<HTMLTextAreaElement>) {
-      if (disabled || isLimitReached) return;
-
-      const items = event.clipboardData?.items;
-      if (!items) return;
-
-      const files: File[] = [];
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        if (item.kind === "file") {
-          const file = item.getAsFile();
-          if (file) {
-            files.push(file);
-          }
-        }
-      }
-
-      if (files.length > 0) {
-        processDroppedOrPastedFiles(files);
-      }
-    }
-
-    function handleDragOver(event: React.DragEvent<HTMLTextAreaElement>) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
     useEffect(() => {
       setIsError(error);
     }, [error]);
@@ -563,7 +500,6 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
           onDragOver={handleDragOver}
           autoFocus={false}
           $maxHeight={maxHeight}
-          onPaste={handlePaste}
         />
         {attachmentPreviews.length > 0 && (
           <AttachmentPreviewBar>

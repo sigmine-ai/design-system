@@ -4,7 +4,8 @@
 yarn.lock
 pnpm-lock.yaml
 package-lock.json
-install-state.gz
+
+.yarn/
 
 # Build output
 /dist
